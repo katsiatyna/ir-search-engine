@@ -1,4 +1,4 @@
-package fr.univ_tours.etu.fr.univ_tours.etu.pdf;
+package fr.univ_tours.etu.pdf;
 
 import org.apache.lucene.document.Document;
 import org.apache.pdfbox.cos.COSDocument;

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package fr.univ_tours.etu.fr.univ_tours.etu.pdf;
+package fr.univ_tours.etu.pdf;
 
 import java.io.File;
 import java.io.FileInputStream;
