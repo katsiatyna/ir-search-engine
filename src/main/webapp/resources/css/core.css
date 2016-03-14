@@ -27,38 +27,19 @@ body{
     height:100%;
 }
 
+.row {
+  margin-top: 20px;
+  margin-bottom: 20px
+}
+
 #div-logo {
-    position: absolute;
-    top: 30%;
-    left: 50%;
-    transform: translateY(-30%);
-
-}
-
-#div-logo img{
-    position: relative;
-    left: -50%;
-}
-
-#qe-div {
-     position: absolute;
-        top: 47%;
-        left:50%;
-        transform: translateY(-47%);
-}
-
-#qe-div-child{
-     position: relative;
-     left: -50%;
+    margin-top: 50px;
+    margin-bottom: 25px;
 }
 
 #custom-search-input {
-        position: absolute;
-        top: 40%;
-        transform: translateY(-40%);
         margin:0;
         padding: 0;
-
     }
 
     #custom-search-input .search-query {
@@ -94,3 +75,6 @@ body{
         z-index: 3;
     }
 
+.advanced-search {
+ padding-left:0;
+}
