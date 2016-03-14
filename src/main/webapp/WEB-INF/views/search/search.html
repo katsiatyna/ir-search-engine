@@ -19,13 +19,15 @@
         <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
     </th:block>
     <div class="container">
-        <div class="row">
+        <div class="row" align="center">
             <div id="div-logo" align="center">
                 <img src="../../../resources/images/logo_place.png"/>
             </div>
+        </div>
+        <div class="row">
             <div id="custom-search-input" align="center">
                 <div class="input-group col-md-8">
-                    <input type="text" class="  search-query form-control" placeholder="Search" />
+                    <input type="text" class="  search-query form-control" placeholder="Seek" />
                                 <span class="input-group-btn">
                                     <button class="btn btn-danger" type="button">
                                         <span class=" glyphicon glyphicon-search"></span>
@@ -33,7 +35,9 @@
                                 </span>
                 </div>
             </div>
-            <div align="center">
+        </div>
+        <div class="row" id="qe-div">
+            <div id="qe-div-child">
                 <span>
                     <b>Query Expansion</b>
                     <input type="checkbox" name="my-checkbox" checked="checked" data-size="mini"/>
