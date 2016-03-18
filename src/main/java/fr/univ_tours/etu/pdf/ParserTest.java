@@ -29,7 +29,8 @@ public class ParserTest {
         pdDoc = null;
         cosDoc = null;
 
-        file = new File(filePath);
+        file = new File(filePath);//tests
+        
         try {
             /*parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
             parser.parse();
