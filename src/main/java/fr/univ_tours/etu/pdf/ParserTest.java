@@ -20,7 +20,7 @@ public class ParserTest {
         PDFTextStripper pdfStripper;
         PDDocument pdDoc ;
         COSDocument cosDoc ;
-
+        //System.out.println("what da ffff");
         String Text ;
         String filePath = "src/main/resources/test_docs/N13-1041.pdf";
         File file;
@@ -32,7 +32,7 @@ public class ParserTest {
         file = new File(filePath);//tests
         
         try {
-            /*parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
+            parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
             parser.parse();
             cosDoc = parser.getDocument();
             pdfStripper = new PDFTextStripper();
@@ -40,9 +40,9 @@ public class ParserTest {
             pdDoc.getNumberOfPages();
             pdfStripper.setStartPage(1);
             pdfStripper.setEndPage(10);
-            Text = pdfStripper.getText(pdDoc);*/
+            Text = pdfStripper.getText(pdDoc);
             Document luceneDocument = LucenePDFDocument.getDocument(file);
-            System.out.println();
+            System.out.println(Text);
         } catch (IOException e) {
             e.printStackTrace();
         }

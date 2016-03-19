@@ -69,6 +69,13 @@
             <artifactId>spring-orm</artifactId>
         </dependency>
         <dependency>
+	<groupId>org.apache.tika</groupId>
+	<artifactId>tika-parsers</artifactId>
+	<version>1.12</version>
+</dependency>
+
+        
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <!-- Avoid issue #72 Could not initialize class org.thymeleaf.templateresolver.ServletContextTemplateResolver due to 'validation is not supported' -->
