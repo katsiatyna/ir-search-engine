@@ -13,6 +13,7 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
@@ -73,27 +74,36 @@ public class TikaParser {
 		return false;
 	}
 	
-	private Document getDocument() throws IOException{
+	public Document getDocument() throws IOException{
 		   Document document = new Document();
 
 		   //index file contents
-		   Field contentField = new Field("content", 
-		      new FileReader("to be editted"));
-		   //index file name
-//		   Field fileNameField = new Field(LuceneConstants.FILE_NAME,
-//		      file.getName(),
-//		      Field.Store.YES,Field.Index.NOT_ANALYZED);
-//		   //index file path
-//		   Field filePathField = new Field(LuceneConstants.FILE_PATH,
-//		      file.getCanonicalPath(),
-//		      Field.Store.YES,Field.Index.NOT_ANALYZED);
-//
-//		   document.add(contentField);
-//		   document.add(fileNameField);
-//		   document.add(filePathField);
+		   Field contentField = new Field(DocFields.CONTENTS, this.getHandler().toString(),Field.Store.NO,Field.Index.ANALYZED);
+		   
+		   //index title
+		   Field titleField = new Field(DocFields.TITLE,this.getMetadata().get("dc:title"),Field.Store.YES,Field.Index.NOT_ANALYZED);
+		   
+		   
+		   //index file path
+		   Field filePathField = new Field(DocFields.FILE_PATH,this.toParse.getCanonicalPath(),Field.Store.YES,Field.Index.NOT_ANALYZED);
+
+		   //index author
+		   Field authorField= new Field(DocFields.AUTHOR,this.getMetadata().get("Author"),Field.Store.YES,Field.Index.NOT_ANALYZED);
+		   
+		 //index keywords
+		   Field keywordsField= new Field(DocFields.KEYWORDS,this.getMetadata().get("meta:keyword"),Field.Store.NO,Field.Index.NOT_ANALYZED);
+		   
+		   document.add(contentField);
+		   document.add(titleField);
+		   document.add(filePathField);
+		   document.add(authorField);
+		   document.add(keywordsField);
+		   
 
 		   return document;
 		} 
+	
+	
 	
 
    public static void main(final String[] args) throws IOException,TikaException, SAXException {
@@ -109,6 +119,12 @@ public class TikaParser {
 	      for(String name : metadataNames) {
         System.out.println(name+ " : " + tp.getMetadata().get(name));
      }
+	      /*
+	      Document d=tp.getDocument();
+	      for(IndexableField field: d.getFields())
+	      {
+	    	  System.out.println(d.get(field.name()));
+	      }*/
 	      
 
    }
