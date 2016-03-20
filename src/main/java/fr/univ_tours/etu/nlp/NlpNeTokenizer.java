@@ -12,7 +12,7 @@ public interface NlpNeTokenizer {
 
     public List<String> getLemmaList();
 
-    public String getNeString(String delimiter);
+    public String getNeString(String delimiter, boolean useQuotes);
 
     public String getLemmaString();
 }

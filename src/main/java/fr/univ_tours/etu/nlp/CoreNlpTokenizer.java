@@ -126,10 +126,16 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
     }
 
     @Override
-    public String getNeString(String delimiter) {
+    public String getNeString(String delimiter, boolean useQuotes) {
         StringBuilder sb = new StringBuilder();
         for (String ne: neList){
+            if(useQuotes){
+                sb.append("\"");
+            }
             sb.append(ne);
+            if(useQuotes){
+                sb.append("\"");
+            }
             sb.append(delimiter);
         }
         String neString = sb.toString();

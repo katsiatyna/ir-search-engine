@@ -28,6 +28,7 @@ import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.BytesRef;
+import org.apache.lucene.util.QueryBuilder;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -88,7 +89,7 @@ public class ParserTest {
         NlpNeTokenizer nlpNeTokenizer = new CoreNlpTokenizer(props);
         nlpNeTokenizer.tokenize(text);
         List<String> neList = nlpNeTokenizer.getNeList();
-        String neString = nlpNeTokenizer.getNeString(";");
+        String neString = nlpNeTokenizer.getNeString(";", false);
         List<String> lemmaList = nlpNeTokenizer.getLemmaList();
         String lemmaString = nlpNeTokenizer.getLemmaString();
         System.out.println();
@@ -126,10 +127,12 @@ public class ParserTest {
             }
         }
 
-        String queryString = "Jing Jiang and Anas";
+        String queryString = "Jing Jiang USA";
         NlpNeTokenizer queryTokenizer = new CoreNlpTokenizer(props);
         queryTokenizer.tokenize(queryString);
-        String neQuery = queryTokenizer.getNeString(";");
+        String neQuery = queryTokenizer.getNeString(";", true);
+        //QueryBuilder builder = new QueryBuilder(new SemicolonAnalyzer());
+        //Query query = builder.createPhraseQuery("namedEntities",neQuery);
         Query query = new QueryParser("namedEntities", new SemicolonAnalyzer()).parse(neQuery);
 
         //for(String ne: queryTokenizer.getNeList()) {
