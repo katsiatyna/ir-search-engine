@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +30,8 @@ public class SearchController {
 
     @RequestMapping(value = "/submit", method = RequestMethod.GET)
     public String submitQuery(@ModelAttribute("searchForm") SearchForm searchForm,
-                              Map<String, Object> model, Principal principal) {
+                              @RequestParam(value = "useQueryExp", required = false) String useQuryExp,
+                              Model model) {
         String mainQuery = searchForm.getMainQuery();
         String titleQuery = searchForm.getTitleQuery();
         String authorsQuery = searchForm.getAuthorQuery();
@@ -37,9 +40,9 @@ public class SearchController {
         System.out.println("Title Query: " + titleQuery);
         System.out.println("Author Query: " + authorsQuery);
         System.out.println("Keywords Query: " + keywordsQuery);
-        System.out.println("Use Query Expansion: " + searchForm.isUseQueryExpansion());
+        System.out.println("Use Query Expansion: " + useQuryExp);
         SearchQueriesRequest searchQueriesRequest = new SearchQueriesRequest();
-        searchQueriesRequest.setUseQueryExpansion(searchForm.isUseQueryExpansion());
+        searchQueriesRequest.setUseQueryExpansion(useQuryExp != null && useQuryExp.equals("on"));
         if(mainQuery != null && !"".equals(mainQuery)){
             searchQueriesRequest.getQueriesDictionary().put(DocFields.CONTENTS, mainQuery);
         }
@@ -55,7 +58,11 @@ public class SearchController {
         System.out.println(searchQueriesRequest.getQueriesDictionary());
         //TODO send object to searcher
 
-
+        List<String> results = new ArrayList<>();
+        for(int i = 0; i < 10; i++){
+            results.add(String.valueOf(i + 1));
+        }
+        model.addAttribute("results", results);
         return "search/results";
     }
 }
