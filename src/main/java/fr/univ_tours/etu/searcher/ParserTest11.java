@@ -38,8 +38,11 @@ import org.apache.pdfbox.util.PDFTextStripper;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.URL;
 import java.util.*;
+import org.apache.lucene.queries.mlt.MoreLikeThis;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 
 /**
@@ -138,21 +141,31 @@ public class ParserTest11 {
         //QueryBuilder builder = new QueryBuilder(new SemicolonAnalyzer());
         //Query query = builder.createPhraseQuery("namedEntities",neQuery);
         //Query query = new QueryParser("namedEntities", new SemicolonAnalyzer()).parse(neQuery);
-        String[] fs = new String[]{"contents","namedEntities"};
-        String[] qs = new String[]{queryString,neQuery};
+        String[] fs = new String[]{"contents", "namedEntities"};
+        String[] qs = new String[]{queryString, neQuery};
 //        MultiFieldQueryParser mfqp = new MultiFieldQueryParser(fs,analyzer);
+        MoreLikeThis likeThis = new MoreLikeThis(reader);
         Query q = MultiFieldQueryParser.parse(qs, fs, analyzer);
+        MoreLikeThis mlt = new MoreLikeThis(reader);
+        mlt.setFieldNames(new String[]{"title", "contents"});
+        mlt.setAnalyzer(analyzer);
+
+        Reader r = new StringReader("doduck prototype idea");
+        
         //for(String ne: queryTokenizer.getNeList()) {
         //Query query = new TermQuery(new Term("namedEntities", ne));
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs docs = searcher.search(q, 2);
         ScoreDoc[] hits = docs.scoreDocs;
+        //IndexReader.termDocs(term);
 
         // 4. display results
         System.out.println("Found " + hits.length + " hits.");
         for (int i = 0; i < hits.length; ++i) {
             int docId = hits[i].doc;
             Document d = searcher.doc(docId);
+            Query query = mlt.like(docId);
+            int anas = likeThis.getMinTermFreq();
             System.out.println((i + 1) + ". " + d.get("Title") + "\t" + d.get("Author") + "\n" + d.get("summary"));
             System.out.println(docs.totalHits + " found for query: " + q);
             //}

@@ -70,30 +70,25 @@ public class Searcher {
         Map<String, String> queriesDictionary = query.getQueriesDictionary();
         boolean useQueryExpansion = query.isUseQueryExpansion();
 
-        int isThereContents = 0;
-        if (queriesDictionary.containsKey(DocFields.CONTENTS)) {
-            isThereContents++;
-        }
-
-        String[] fs = new String[queriesDictionary.size() + isThereContents];
-        String[] qs = new String[queriesDictionary.size() + isThereContents];
+        List<String> fsa = new ArrayList<>();
+        List<String> qsa = new ArrayList<>();
 
         int counter = 0;
         for (Map.Entry<String, String> entry : queriesDictionary.entrySet()) {
-            fs[counter] = entry.getKey();
-            qs[counter++] = entry.getValue();
+            fsa.add(entry.getKey());
+            qsa.add(entry.getValue());
         }
 
         if (queriesDictionary.containsKey(DocFields.CONTENTS)) {
             NlpNeTokenizer queryTokenizer = new CoreNlpTokenizer(props);
             queryTokenizer.tokenize(queriesDictionary.get(DocFields.CONTENTS));
-            if(queryTokenizer.getNeList() != null && queryTokenizer.getNeList().size() != 0) {
-                fs[counter] = DocFields.NAMED_ENTITIES;
-                qs[counter] = queryTokenizer.getNeString(";", true);
+            if (queryTokenizer.getNeList() != null && queryTokenizer.getNeList().size() != 0) {
+                fsa.add(DocFields.NAMED_ENTITIES);
+                qsa.add(queryTokenizer.getNeString(";", true));
             }
         }
 
-        Query q = MultiFieldQueryParser.parse(qs, fs, analyzer);
+        Query q = MultiFieldQueryParser.parse(qsa.toArray(new String[qsa.size()]), fsa.toArray(new String[fsa.size()]), analyzer);
 
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs docs = searcher.search(q, 2);
