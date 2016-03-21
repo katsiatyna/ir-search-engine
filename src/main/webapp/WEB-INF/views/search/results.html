@@ -15,12 +15,19 @@
         <!-- /* The message code is returned from the @Controller */ -->
         <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
     </th:block>
-    <div class="container" align="center">
-        <div class="row" align="center">
-            <div id="div-logo" align="center">
-                <img src="../../../resources/images/logo.jpg" width="467" height="107"/>
+    <div class="container">
+        <div class="row" >
+            <div id="div-logo" >
+                <img src="../../../resources/images/logo.jpg" width="280" height="64"/>
             </div>
         </div>
+        <table>
+            <tr th:each="result : ${results}">
+                <td th:text="${result}"></td>
+
+            </tr>
+        </table>
+
 
     </div>
 </div>
