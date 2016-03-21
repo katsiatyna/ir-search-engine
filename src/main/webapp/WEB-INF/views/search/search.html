@@ -24,13 +24,13 @@
                 <img src="../../../resources/images/logo.jpg" width="467" height="107"/>
             </div>
         </div>
-        <form>
+        <form th:action="@{/search/submit}" method="get"  th:object="${searchForm}" id="searchForm" >
             <div class="row">
                 <div id="custom-search-input" align="center">
                     <div class="input-group col-md-8">
-                        <input type="text" class="  search-query form-control" placeholder="Seek" />
+                        <input type="text" class="  search-query form-control" placeholder="Seek" th:field="*{mainQuery}" />
                                     <span class="input-group-btn">
-                                        <button class="btn btn-danger" type="button">
+                                        <button class="btn btn-danger" type="submit" form="searchForm">
                                             <span class=" glyphicon glyphicon-search"></span>
                                         </button>
                                     </span>
@@ -41,8 +41,10 @@
                 <div id="qe-div-child" align="center">
                     <span>
                         <label for="qe-checkbox"><b>Query Expansion</b></label>
-                        <input type="checkbox" id="qe-checkbox" name="my-checkbox" checked="checked" data-size="mini"/>
+                        <input type="checkbox" id="qe-checkbox" name="my-checkbox" checked="checked" data-size="mini"
+                                />
                     </span>
+                    <input type="hidden" id="myhidden" th:field="*{useQueryExpansion}" name="my-hidden"/>
                 </div>
             </div>
             <div class="row col-md-offset-2 advanced-search" align="left">
@@ -50,17 +52,17 @@
             </div>
             <div class="row">
                 <div id="title-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
-                    <input type="text" class="form-control" placeholder="Title" />
+                    <input type="text" class="form-control" placeholder="Title" th:field="*{titleQuery}" />
                 </div>
             </div>
             <div class="row">
                 <div id="author-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
-                    <input type="text" class="form-control" placeholder="Author" />
+                    <input type="text" class="form-control" placeholder="Author" th:field="*{authorQuery}"/>
                 </div>
             </div>
             <div class="row">
-                <div id="subject-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
-                    <input type="text" class="form-control" placeholder="Subject code" />
+                <div id="keywords-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
+                    <input type="text" class="form-control" placeholder="Keywords" th:field="*{keywordsQuery}"/>
                 </div>
             </div>
 
@@ -72,6 +74,12 @@
 <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
 <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
 <script src="../../../resources/js/bootstrap-switch.min.js" th:src="@{/resources/js/bootstrap-switch.min.js}"></script>
-<script>$("[name='my-checkbox']").bootstrapSwitch();</script>
+
+<script>
+$("[name='my-checkbox']").bootstrapSwitch();
+$("[name='my-checkbox']").change(function(){
+    $("[name='my-hidden']").val($(this).val());
+});
+</script>
 </body>
 </html>

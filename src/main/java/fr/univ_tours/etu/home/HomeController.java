@@ -9,15 +9,12 @@ import java.security.Principal;
 @Controller
 public class HomeController {
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String index(Principal principal) {
-        return principal != null ? "home/homeSignedIn" : "home/homeNotSignedIn";
+        return principal != null ? "redirect:/search" : "home/homeNotSignedIn";
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String searchPage(Principal principal) {
-        return principal != null ? "home/homeSignedIn" : "search/search";
-    }
+
 
 
 }

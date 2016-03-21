@@ -35,6 +35,6 @@ public class SignupController {
 		accountService.signin(account);
         // see /WEB-INF/i18n/messages.properties and /WEB-INF/views/homeSignedIn.html
         MessageHelper.addSuccessAttribute(ra, "signup.success");
-		return "redirect:/";
+		return "redirect:/search";
 	}
 }
