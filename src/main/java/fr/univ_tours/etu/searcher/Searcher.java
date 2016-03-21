@@ -43,10 +43,10 @@ public class Searcher {
         this.props = new Properties();
         this.props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File("myIdx").toPath()));
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_PATH).toPath()));
 
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
-        analyzerPerField.put("namedEntities", new SemicolonAnalyzer());
+        analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
         this.analyzer = new PerFieldAnalyzerWrapper(
                 new StandardAnalyzer(), analyzerPerField);
         this.numRetrievedDocs = Integer.MAX_VALUE;
@@ -56,16 +56,16 @@ public class Searcher {
         this.props = new Properties();
         this.props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File("myIdx").toPath()));
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_PATH).toPath()));
 
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
-        analyzerPerField.put("namedEntities", new SemicolonAnalyzer());
+        analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
         this.analyzer = new PerFieldAnalyzerWrapper(
                 new StandardAnalyzer(), analyzerPerField);
         this.numRetrievedDocs = numRetrievedDocs;
     }
 
-    List<ResultObject> search(String dir, SearchQueriesRequest query) throws IOException, ParseException {
+    public List<ResultObject> search(String dir, SearchQueriesRequest query) throws IOException, ParseException {
 
         Map<String, String> queriesDictionary = query.getQueriesDictionary();
         boolean useQueryExpansion = query.isUseQueryExpansion();
@@ -86,7 +86,7 @@ public class Searcher {
 
         if (queriesDictionary.containsKey(DocFields.CONTENTS)) {
             NlpNeTokenizer queryTokenizer = new CoreNlpTokenizer(props);
-            queryTokenizer.tokenize(queriesDictionary.get("contents"));
+            queryTokenizer.tokenize(queriesDictionary.get(DocFields.CONTENTS));
             fs[counter] = DocFields.NAMED_ENTITIES;
             qs[counter] = queryTokenizer.getNeString(";", true);
         }

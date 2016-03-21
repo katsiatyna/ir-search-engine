@@ -10,6 +10,6 @@ public class DocFields {
     public static final String DOC_PATH = "path";
     public static final String SUMMARY = "summary";
     public static final String NAMED_ENTITIES = "namedEntities";
+    public static final String INDEX_PATH = "namedEntities";
     // public static final int MAX_SEARCH = 10;
-
 }
