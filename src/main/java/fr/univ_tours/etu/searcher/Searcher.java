@@ -65,7 +65,7 @@ public class Searcher {
         this.numRetrievedDocs = numRetrievedDocs;
     }
 
-    public List<ResultObject> search(String dir, SearchQueriesRequest query) throws IOException, ParseException {
+    public List<ResultObject> search(SearchQueriesRequest query) throws IOException, ParseException {
 
         Map<String, String> queriesDictionary = query.getQueriesDictionary();
         boolean useQueryExpansion = query.isUseQueryExpansion();
