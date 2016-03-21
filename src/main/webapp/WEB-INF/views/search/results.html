@@ -3,9 +3,11 @@
 <head>
     <title th:text="#{view.index.title}">Welcome!</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap.min.css}"/>
-    <link href="../../../resources/css/bootstrap-switch.min.css" rel="stylesheet" media="screen" th:href="@{/resources/css/bootstrap-switch.min.css}"/>
-    <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}" />
+    <link href="../../../resources/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap.min.css}"/>
+    <link href="../../../resources/css/bootstrap-switch.min.css" rel="stylesheet" media="screen"
+          th:href="@{/resources/css/bootstrap-switch.min.css}"/>
+    <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}"/>
 </head>
 <body>
 <div th:replace="fragments/header :: header">&nbsp;</div>
@@ -13,28 +15,76 @@
     <!-- /* Handle the flash message */-->
     <th:block th:if="${message != null}">
         <!-- /* The message code is returned from the @Controller */ -->
-        <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">&nbsp;</div>
+        <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">
+            &nbsp;</div>
     </th:block>
     <div class="container">
-        <div class="row" >
-            <div id="div-logo" >
-                <img src="../../../resources/images/logo.jpg" width="280" height="64"/>
-            </div>
-        </div>
+
+            <form th:action="@{/search/submit}" method="get" th:object="${searchForm}" id="searchForm">
+                <div class="row">
+                    <div id="div-logo">
+                        <span id="mainSearch">
+                            <img src="../../../resources/images/logo_mini.jpg" width="118" height="64"/>
+                            <span id="custom-search-input" align="center">
+                                <div class="input-group col-md-8">
+                                    <input type="text" class="  search-query form-control" placeholder="Seek"
+                                           th:field="*{mainQuery}"/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-danger" type="submit" form="searchForm">
+                                        <span class=" glyphicon glyphicon-search"></span>
+                                    </button>
+                                </span>
+                                </div>
+                            </span>
+                            <span>
+                                <label for="qe-checkbox"><b>Query Expansion</b></label>
+                                <input type="checkbox" id="qe-checkbox" name="useQueryExp"  data-size="mini"
+                                       th:checked="${useQueryExpansion}"/>
+                            </span>
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+
+                </div>
+                <div class="row" id="qe-div">
+                    <div id="qe-div-child">
+
+                    </div>
+                </div>
+                <div class="row col-md-offset-2 advanced-search" align="left">
+                    <b>Advanced search</b>
+                </div>
+                <div class="row">
+                    <div id="title-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
+                        <input type="text" class="form-control" placeholder="Title" th:field="*{titleQuery}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="author-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
+                        <input type="text" class="form-control" placeholder="Author" th:field="*{authorQuery}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="keywords-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
+                        <input type="text" class="form-control" placeholder="Keywords" th:field="*{keywordsQuery}"/>
+                    </div>
+                </div>
+            </form>
         <table>
             <tr th:each="result : ${results}">
-                <td th:text="${result}"></td>
-
+                <td th:text="${result.title}"></td>
             </tr>
         </table>
 
 
+        </div>
     </div>
-</div>
-<!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
-<script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
-<script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
-<script src="../../../resources/js/bootstrap-switch.min.js" th:src="@{/resources/js/bootstrap-switch.min.js}"></script>
-<script>$("[name='my-checkbox']").bootstrapSwitch();</script>
+    <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
+    <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
+    <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
+    <script src="../../../resources/js/bootstrap-switch.min.js"
+            th:src="@{/resources/js/bootstrap-switch.min.js}"></script>
+    <script>$("[name='useQueryExp']").bootstrapSwitch();</script>
 </body>
 </html>

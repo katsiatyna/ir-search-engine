@@ -43,7 +43,7 @@ public class Searcher {
         this.props = new Properties();
         this.props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_PATH).toPath()));
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
 
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
         analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
@@ -56,7 +56,7 @@ public class Searcher {
         this.props = new Properties();
         this.props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_PATH).toPath()));
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
 
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
         analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
@@ -87,8 +87,10 @@ public class Searcher {
         if (queriesDictionary.containsKey(DocFields.CONTENTS)) {
             NlpNeTokenizer queryTokenizer = new CoreNlpTokenizer(props);
             queryTokenizer.tokenize(queriesDictionary.get(DocFields.CONTENTS));
-            fs[counter] = DocFields.NAMED_ENTITIES;
-            qs[counter] = queryTokenizer.getNeString(";", true);
+            if(queryTokenizer.getNeList() != null && queryTokenizer.getNeList().size() != 0) {
+                fs[counter] = DocFields.NAMED_ENTITIES;
+                qs[counter] = queryTokenizer.getNeString(";", true);
+            }
         }
 
         Query q = MultiFieldQueryParser.parse(qs, fs, analyzer);
@@ -105,7 +107,7 @@ public class Searcher {
             resultObjects.add(new ResultObject(i,
                     d.get(DocFields.TITLE),
                     d.get(DocFields.AUTHOR),
-                    d.get(DocFields.DOC_PATH),
+                    d.get(DocFields.FILE_PATH),
                     d.get(DocFields.SUMMARY)));
         }
         return resultObjects;
