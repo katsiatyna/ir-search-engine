@@ -45,14 +45,14 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
             for (CoreLabel token : sentence.get(CoreAnnotations.TokensAnnotation.class)) {
                 // this is the text of the token
                 String word = token.get(CoreAnnotations.TextAnnotation.class);
-                System.out.println("Word: " + word);
+                //System.out.println("Word: " + word);
                 String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
-                System.out.println("Lemma: " + lemma);
+               // System.out.println("Lemma: " + lemma);
                 lemmaList.add(lemma);
                 // this is the NER label of the token
                 String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
-                System.out.println("NE: " + ne);
-                System.out.println();
+//                System.out.println("NE: " + ne);
+//                System.out.println();
                 currNeToken = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
                 // Strip out "O"s completely, makes code below easier to understand
                 if (currNeToken.equals("O")) {

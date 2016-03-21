@@ -27,6 +27,10 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Properties;
+
+import fr.univ_tours.etu.nlp.*;
+import fr.univ_tours.etu.pdf.*;
 
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
@@ -39,6 +43,8 @@ import org.apache.pdfbox.exceptions.InvalidPasswordException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.util.PDFTextStripper;
+
+import fr.univ_tours.etu.nlp.NlpNeTokenizer;
 
 /**
  * This class is used to create a document for the lucene search engine. This should easily plug into the IndexPDFFiles
@@ -179,6 +185,15 @@ public class LucenePDFDocument
             addTextField(document, name, DateTools.dateToString(value, DATE_TIME_RES));
         }
     }
+    
+    private void addUnstoredDate(Document document, String name, Date calendar)
+    {
+        if (calendar != null)
+        {
+        	document.add(new TextField(name, DateTools.dateToString(calendar, DATE_TIME_RES), Field.Store.NO));
+           // addTextField(document, name, DateTools.dateToString(value, DATE_TIME_RES));
+        }
+    }
 
     private void addTextField(Document document, String name, Calendar value)
     {
@@ -233,20 +248,21 @@ public class LucenePDFDocument
 
         // Add the url as a field named "url". Use an UnIndexed field, so
         // that the url is just stored with the document, but is not searchable.
-        addUnindexedField(document, "path", file.getPath());
-        addUnindexedField(document, "url", file.getPath().replace(FILE_SEPARATOR, '/'));
+        addUnindexedField(document, DocFields.FILE_PATH, file.getPath());
+        addUnindexedField(document, DocFields.FILE_NAME, file.getName());
+      //addUnindexedField(document, "url", file.getPath().replace(FILE_SEPARATOR, '/'));
 
         // Add the last modified date of the file a field named "modified". Use a
         // Keyword field, so that it's searchable, but so that no attempt is made
         // to tokenize the field into words.
-        addKeywordField(document, "modified", timeToString(file.lastModified()));
+       // addKeywordField(document, "modified", timeToString(file.lastModified()));
 
         String uid = createUID(file);
 
         // Add the uid as a field, so that index can be incrementally maintained.
         // This field is not stored with document, it is indexed, but it is not
         // tokenized prior to indexing.
-        addUnstoredKeywordField(document, "uid", uid);
+        addUnstoredKeywordField(document, DocFields.UID, uid);
 
         FileInputStream input = null;
         try
@@ -392,26 +408,42 @@ public class LucenePDFDocument
 
             // Add the tag-stripped contents as a Reader-valued Text field so it will
             // get tokenized and indexed.
-            addTextField(document, "contents", reader);
+            addTextField(document, DocFields.CONTENTS, reader);
+            TextField ne= this.getNamedEntities(contents);
 
             PDDocumentInformation info = pdfDocument.getDocumentInformation();
             if (info != null)
             {
-                addTextField(document, "Author", info.getAuthor());
-                addTextField(document, "CreationDate", info.getCreationDate());
-                addTextField(document, "Creator", info.getCreator());
-                addTextField(document, "Keywords", info.getKeywords());
-                addTextField(document, "ModificationDate", info.getModificationDate());
-                addTextField(document, "Producer", info.getProducer());
-                addTextField(document, "Subject", info.getSubject());
-                addTextField(document, "Title", info.getTitle());
-                addTextField(document, "Trapped", info.getTrapped());
+            	document.add(ne);//adding named entities
+                addTextField(document, DocFields.AUTHOR, info.getAuthor());
+                
+                try{//to avoid issues with CreationDate
+                addUnstoredDate(document, DocFields.CREATION_DATE, info.getCreationDate().getTime());
+                }catch(Exception e)
+                {
+                	System.out.println("Warning: some issue with CreationDate attribute!");
+                }
+                
+                addTextField(document, DocFields.CREATOR, info.getCreator());
+                addTextField(document, DocFields.KEYWORDS, info.getKeywords());
+                
+            
+                addTextField(document, DocFields.SUBJECT, info.getSubject());
+                addTextField(document, DocFields.TITLE, info.getTitle());
+                
+                //addTextField(document, "Title", info.getTitle());
+              //addTextField(document, "ModificationDate", info.getModificationDate());
+                //addTextField(document, "Producer", info.getProducer());
+                //addTextField(document, "Trapped", info.getTrapped());
+                
             }
+            
+            
             int summarySize = Math.min(contents.length(), 1500);
             String summary = contents.substring(0, summarySize);
             // Add the summary as an UnIndexed field, so that it is stored and returned
             // with hit documents for display.
-            addUnindexedField(document, "summary", summary);
+            addUnindexedField(document, DocFields.SUMMARY, summary);
         } finally
         {
             if (pdfDocument != null)
@@ -444,5 +476,23 @@ public class LucenePDFDocument
     public static String createUID(File file)
     {
         return file.getPath().replace(FILE_SEPARATOR, '\u0000') + "\u0000" + timeToString(file.lastModified());
+    }
+    
+    /**
+     * Gets all named-entities as TextField
+     * @param text
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public TextField getNamedEntities(String text) throws IOException {
+
+        Properties props = new Properties();
+        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
+        NlpNeTokenizer nlpNeTokenizer = new CoreNlpTokenizer(props);
+        nlpNeTokenizer.tokenize(text);
+        String neString = nlpNeTokenizer.getNeString(";", false);
+
+        return new TextField(DocFields.NAMED_ENTITIES, neString, Field.Store.NO);        
     }
 }
