@@ -9,6 +9,8 @@ import fr.univ_tours.etu.nlp.SemicolonAnalyzer;
 import fr.univ_tours.etu.search.SearchQueriesRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +22,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.queries.mlt.MoreLikeThis;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.search.IndexSearcher;
@@ -69,6 +72,7 @@ public class Searcher {
 
         Map<String, String> queriesDictionary = query.getQueriesDictionary();
         boolean useQueryExpansion = query.isUseQueryExpansion();
+        List<Integer> docsToExpand = (useQueryExpansion) ? new ArrayList<>() : null;
 
         List<String> fsa = new ArrayList<>();
         List<String> qsa = new ArrayList<>();
@@ -91,13 +95,16 @@ public class Searcher {
         Query q = MultiFieldQueryParser.parse(qsa.toArray(new String[qsa.size()]), fsa.toArray(new String[fsa.size()]), analyzer);
 
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs docs = searcher.search(q, 2);
+        TopDocs docs = searcher.search(q, 10);
         ScoreDoc[] hits = docs.scoreDocs;
 
         List<ResultObject> resultObjects = new ArrayList<>();
 
         for (int i = 0; i < hits.length; ++i) {
             int docId = hits[i].doc;
+            if (useQueryExpansion) {
+                docsToExpand.add(docId);
+            }
             Document d = searcher.doc(docId);
             resultObjects.add(new ResultObject(i,
                     d.get(DocFields.TITLE),
@@ -105,6 +112,30 @@ public class Searcher {
                     d.get(DocFields.FILE_PATH),
                     d.get(DocFields.SUMMARY)));
         }
+
+        if (useQueryExpansion) {
+            MoreLikeThis mlt = new MoreLikeThis(reader);
+            mlt.setMinTermFreq(0);
+            mlt.setMinDocFreq(0);
+
+            for (Integer doc : docsToExpand) {
+
+                Query expandedQuery = mlt.like(doc);
+
+                TopDocs topDocs = searcher.search(expandedQuery, 1);
+
+                for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+                    Document aSimilar = searcher.doc(scoreDoc.doc);
+
+                    resultObjects.add(new ResultObject(10,
+                            aSimilar.get(DocFields.TITLE),
+                            aSimilar.get(DocFields.AUTHOR),
+                            aSimilar.get(DocFields.FILE_PATH),
+                            aSimilar.get(DocFields.SUMMARY)));
+                }
+            }
+        }
+
         return resultObjects;
     }
 

@@ -94,7 +94,7 @@ public class LikeThisTest {
         mlt.setAnalyzer(analyzer);
 
         Reader sReader = new StringReader(searchForSimilar);
-        Query query = mlt.like(1);
+        Query query = mlt.like("content",sReader);
 
         TopDocs topDocs = indexSearcher.search(query, 10);
 
