@@ -32,6 +32,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 public class Indexer {
 
    private IndexWriter writer;
+   private IndexWriter synWriter;
 
    /**
     * Gets the path to the PDF files directory
@@ -57,15 +58,20 @@ public class Indexer {
               .setOpenMode(IndexWriterConfig.OpenMode.CREATE);
        writer = new IndexWriter(indexDirectory, config);
       
-      
-//      StandardAnalyzer analyzer = new StandardAnalyzer();
-//     writer = new IndexWriter(indexDirectory, new IndexWriterConfig(analyzer));
+       Directory synDirectory = FSDirectory.open((new File(DocFields.SYN_DIR)).toPath());
+       WhitespaceAnalyzer synAnalyzer = new WhitespaceAnalyzer();
+       synWriter = new IndexWriter(synDirectory, new IndexWriterConfig(synAnalyzer));
  
    }
    
    public File getIndexDirectory()
    {
 	   return new File(DocFields.INDEX_DIR);
+   }
+   
+   public File getSynonymsDirectory()
+   {
+	   return new File(DocFields.SYN_DIR);
    }
    
    public File getDataDirectory()
@@ -86,7 +92,11 @@ public class Indexer {
       
       Document document= lpd.convertDocument(file);
       writer.addDocument(document);
+      this.synWriter.addDocument(lpd.getSynDoc());
+      
    }
+   
+
 
    /**
     * Create full index for all documents available to be indexed and returns the number of total indexed
@@ -109,6 +119,7 @@ public class Indexer {
             && file.canRead()){
         	// System.out.println("NOW FILE: " + file.getName());
             indexFile(file);
+            //indexSynonyms(file);
          }
       }
       return writer.numDocs();

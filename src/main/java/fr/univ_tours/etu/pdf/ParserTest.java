@@ -62,26 +62,28 @@ public class ParserTest {
 
         file = new File(filePath);
         try {
-            parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
-            parser.parse();
-            cosDoc = parser.getDocument();
-            pdfStripper = new PDFTextStripper();
-            pdDoc = new PDDocument(cosDoc);
-            pdDoc.getNumberOfPages();
-            pdfStripper.setStartPage(1);
-            pdfStripper.setEndPage(10);
-            text = pdfStripper.getText(pdDoc);
-            //testDictionary();
-            testOpenNlp(text, file);
+//            parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
+//            parser.parse();
+//            cosDoc = parser.getDocument();
+//            pdfStripper = new PDFTextStripper();
+//            pdDoc = new PDDocument(cosDoc);
+//            pdDoc.getNumberOfPages();
+//            pdfStripper.setStartPage(1);
+//            pdfStripper.setEndPage(10);
+//            text = pdfStripper.getText(pdDoc);
+            testDictionary();
+           // testOpenNlp(text, file);
 
             System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        } 
+//        catch (ParseException e) {
+//            e.printStackTrace();
+//        }
     }
 
+    /*
     public static void testOpenNlp(String text, File file) throws IOException, ParseException {
 
         Properties props = new Properties();
@@ -145,25 +147,30 @@ public class ParserTest {
 
 
 
-    }
+    }*/
 
 
 
 
         public static void testDictionary() throws IOException {
-            String wnhome = System.getenv("WNHOME");
+            //String wnhome = System.getenv("WNHOME");
+        	String wnhome="/Users/Ward/Downloads";
             String path = wnhome + File.separator + "dict";
+            
+            
             URL url = new URL("file", null, path);
 
             IDictionary dictionary = new Dictionary(url);
             dictionary.open();
-
-            IIndexWord indexWord = dictionary.getIndexWord("database", POS.NOUN);
+             // /Users/Ward/Downloads
+            IIndexWord indexWord = dictionary.getIndexWord("test", POS.NOUN);
+            
+            
             IWordID wordID = indexWord.getWordIDs().get(0);
             IWord word = dictionary.getWord(wordID);
-            System.out.println("Id = " + wordID);
-            System.out.println(" Lemma = " + word.getLemma());
-            System.out.println(" Gloss = " + word.getSynset().getGloss());
+//            System.out.println("Id = " + wordID);
+//            System.out.println(" Lemma = " + word.getLemma());
+//            System.out.println(" Gloss = " + word.getSynset().getGloss());
 
             List<ISynsetID> hypernyms =
                     word.getSynset().getRelatedSynsets(Pointer.HYPERNYM);
@@ -180,6 +187,7 @@ public class ParserTest {
                 System.out.println("}");
             }
         }
+        
     }
 
 

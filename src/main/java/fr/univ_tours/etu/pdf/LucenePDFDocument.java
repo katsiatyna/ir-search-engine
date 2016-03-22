@@ -29,6 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 
+import fr.univ_tours.etu.index.Synoner;
 import fr.univ_tours.etu.nlp.*;
 import fr.univ_tours.etu.pdf.*;
 
@@ -114,12 +115,14 @@ import fr.univ_tours.etu.nlp.NlpNeTokenizer;
 public class LucenePDFDocument
 {
     private static final char FILE_SEPARATOR = System.getProperty("file.separator").charAt(0);
+    private String extractedContent="";
 
     // given caveat of increased search times when using
     // MICROSECOND, only use SECOND by default
     private static final DateTools.Resolution DATE_TIME_RES = DateTools.Resolution.SECOND;
 
     private PDFTextStripper stripper = null;
+	private Document readySynDoc;
 
     /** not Indexed, tokenized, stored. */
     public static final FieldType TYPE_STORED_NOT_INDEXED = new FieldType();
@@ -245,11 +248,15 @@ public class LucenePDFDocument
     public Document convertDocument(File file) throws IOException
     {
         Document document = new Document();
+        Document synDoc = new Document();
 
         // Add the url as a field named "url". Use an UnIndexed field, so
         // that the url is just stored with the document, but is not searchable.
         addUnindexedField(document, DocFields.FILE_PATH, file.getPath());
         addUnindexedField(document, DocFields.FILE_NAME, file.getName());
+        
+        addUnindexedField(synDoc, DocFields.FILE_PATH, file.getPath());
+        addUnindexedField(synDoc, DocFields.FILE_NAME, file.getName());
       //addUnindexedField(document, "url", file.getPath().replace(FILE_SEPARATOR, '/'));
 
         // Add the last modified date of the file a field named "modified". Use a
@@ -263,12 +270,15 @@ public class LucenePDFDocument
         // This field is not stored with document, it is indexed, but it is not
         // tokenized prior to indexing.
         addUnstoredKeywordField(document, DocFields.UID, uid);
+        addUnstoredKeywordField(synDoc, DocFields.UID, uid);
 
         FileInputStream input = null;
         try
         {
             input = new FileInputStream(file);
             addContent(document, input, file.getPath());
+            this.addSynonyms(synDoc);
+            this.readySynDoc=synDoc;
         }
         finally
         {
@@ -281,6 +291,11 @@ public class LucenePDFDocument
         // return the document
 
         return document;
+    }
+    
+    public Document getSynDoc()
+    {
+    	return this.readySynDoc;
     }
 
     /**
@@ -328,6 +343,8 @@ public class LucenePDFDocument
         // return the document
         return document;
     }
+    
+    
 
     /**
      * This will get a lucene document from a PDF file.
@@ -373,6 +390,16 @@ public class LucenePDFDocument
         LucenePDFDocument converter = new LucenePDFDocument();
         return converter.convertDocument(url);
     }
+    
+    private void addSynonyms(Document doc) throws IOException
+    {
+    	Synoner sn= new Synoner(this.extractedContent);
+		sn.Tokenize();
+		String readySyn = sn.getSynText();
+		//System.out.println(readySyn);
+		StringReader reader = new StringReader(readySyn);
+        addTextField(doc, DocFields.SYNONYMS, reader);
+    }
 
     /**
      * This will add the contents to the lucene document.
@@ -403,6 +430,8 @@ public class LucenePDFDocument
             // is shared as long as the buffer content is not modified, which will
             // not occur here.
             String contents = writer.getBuffer().toString();
+            this.extractedContent=contents;
+            //System.out.println(contents);
 
             StringReader reader = new StringReader(contents);
 

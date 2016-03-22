@@ -14,10 +14,12 @@ public class DocFields {
 	   public static final String NAMED_ENTITIES="namedEntities";
 	   public static final String SUMMARY="summary";
 	   public static final String UID="uid";
+	   public static final String SYNONYMS="synonyms";
 	   
 	   
 	   public static final String INDEX_DIR= "src/main/resources/indexdir";
 	   public static final String DATA_DIR="src/main/resources/test_docs";
+	   public static final String SYN_DIR="src/main/resources/synindexdir";
 	   
 	  // public static final int MAX_SEARCH = 10;
 
