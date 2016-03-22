@@ -257,18 +257,11 @@ public class LucenePDFDocument
         
         addUnindexedField(synDoc, DocFields.FILE_PATH, file.getPath());
         addUnindexedField(synDoc, DocFields.FILE_NAME, file.getName());
-      //addUnindexedField(document, "url", file.getPath().replace(FILE_SEPARATOR, '/'));
-
-        // Add the last modified date of the file a field named "modified". Use a
-        // Keyword field, so that it's searchable, but so that no attempt is made
-        // to tokenize the field into words.
+      
        // addKeywordField(document, "modified", timeToString(file.lastModified()));
 
         String uid = createUID(file);
 
-        // Add the uid as a field, so that index can be incrementally maintained.
-        // This field is not stored with document, it is indexed, but it is not
-        // tokenized prior to indexing.
         addUnstoredKeywordField(document, DocFields.UID, uid);
         addUnstoredKeywordField(synDoc, DocFields.UID, uid);
 
@@ -425,10 +418,6 @@ public class LucenePDFDocument
             }
             stripper.writeText(pdfDocument, writer);
 
-            // Note: the buffer to string operation is costless;
-            // the char array value of the writer buffer and the content string
-            // is shared as long as the buffer content is not modified, which will
-            // not occur here.
             String contents = writer.getBuffer().toString();
             this.extractedContent=contents;
             //System.out.println(contents);
@@ -437,7 +426,15 @@ public class LucenePDFDocument
 
             // Add the tag-stripped contents as a Reader-valued Text field so it will
             // get tokenized and indexed.
-            addTextField(document, DocFields.CONTENTS, reader);
+            
+            FieldType type = new FieldType();
+            type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
+            type.setStored(false);
+            type.setTokenized(true);
+            document.add(new Field(DocFields.CONTENTS, reader, type));
+            
+            
+           // addTextField(document, DocFields.CONTENTS, reader);
             TextField ne= this.getNamedEntities(contents);
 
             PDDocumentInformation info = pdfDocument.getDocumentInformation();
