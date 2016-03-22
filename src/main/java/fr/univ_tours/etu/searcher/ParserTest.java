@@ -16,6 +16,8 @@ import edu.stanford.nlp.util.CoreMap;
 import fr.univ_tours.etu.nlp.CoreNlpTokenizer;
 import fr.univ_tours.etu.nlp.NlpNeTokenizer;
 import fr.univ_tours.etu.nlp.SemicolonAnalyzer;
+import fr.univ_tours.etu.pdf.DocFields;
+import fr.univ_tours.etu.search.SearchQueriesRequest;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
@@ -60,9 +62,39 @@ public class ParserTest {
         pdDoc = null;
         cosDoc = null;
 
-        file = new File(filePath);
-        try {
-            parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
+        //file = new File(filePath);
+
+        String mainQuery = "abstract";
+        String titleQuery = null;
+        String authorsQuery = null;
+        String keywordsQuery = null;
+        SearchQueriesRequest searchQueriesRequest = new SearchQueriesRequest();
+        searchQueriesRequest.setUseQueryExpansion(true);
+
+        if(mainQuery != null && !"".equals(mainQuery)){
+            searchQueriesRequest.getQueriesDictionary().put(DocFields.CONTENTS, mainQuery);
+        }
+        if(titleQuery != null && !"".equals(titleQuery)){
+            searchQueriesRequest.getQueriesDictionary().put(DocFields.TITLE, titleQuery);
+        }
+        if(authorsQuery != null && !"".equals(authorsQuery)){
+            searchQueriesRequest.getQueriesDictionary().put(DocFields.AUTHOR, authorsQuery);
+        }
+        if(keywordsQuery != null && !"".equals(keywordsQuery)){
+            searchQueriesRequest.getQueriesDictionary().put(DocFields.KEYWORDS, keywordsQuery);
+        }
+
+        List<ResultObject> results = new ArrayList<>();
+        try{
+            Searcher searcher = new Searcher();
+            results = searcher.search(searchQueriesRequest);
+
+        } catch (IOException e){
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+            /*parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
             parser.parse();
             cosDoc = parser.getDocument();
             pdfStripper = new PDFTextStripper();
@@ -73,13 +105,8 @@ public class ParserTest {
             text = pdfStripper.getText(pdDoc);
             //testDictionary();
             testOpenNlp(text, file);
-
-            System.out.println();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+*/
+        System.out.println();
     }
 
     public static void testOpenNlp(String text, File file) throws IOException, ParseException {

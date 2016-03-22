@@ -1,6 +1,9 @@
 package fr.univ_tours.etu.search;
 
 import fr.univ_tours.etu.pdf.DocFields;
+import fr.univ_tours.etu.searcher.ResultObject;
+import fr.univ_tours.etu.searcher.Searcher;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -9,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by Katherine on 20.03.2016.
@@ -20,6 +25,8 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "/search")
 public class SearchController {
+
+    private static Logger logger = Logger.getLogger("fr.univ_tours.etu");
 
     @RequestMapping( method = RequestMethod.GET)
     public String searchPage(Model model) {
@@ -36,13 +43,16 @@ public class SearchController {
         String titleQuery = searchForm.getTitleQuery();
         String authorsQuery = searchForm.getAuthorQuery();
         String keywordsQuery = searchForm.getKeywordsQuery();
-        System.out.println("Main Query: " + mainQuery);
-        System.out.println("Title Query: " + titleQuery);
-        System.out.println("Author Query: " + authorsQuery);
-        System.out.println("Keywords Query: " + keywordsQuery);
-        System.out.println("Use Query Expansion: " + useQuryExp);
+        logger.info("Main Query: " + mainQuery);
+        logger.info("Title Query: " + titleQuery);
+        logger.info("Author Query: " + authorsQuery);
+        logger.info("Keywords Query: " + keywordsQuery);
+        logger.info("Use Query Expansion: " + useQuryExp);
         SearchQueriesRequest searchQueriesRequest = new SearchQueriesRequest();
         searchQueriesRequest.setUseQueryExpansion(useQuryExp != null && useQuryExp.equals("on"));
+
+        searchForm.setUseQueryExpansion(searchQueriesRequest.isUseQueryExpansion());
+        logger.info("UseQueryExpansion: " + searchForm.isUseQueryExpansion());
         if(mainQuery != null && !"".equals(mainQuery)){
             searchQueriesRequest.getQueriesDictionary().put(DocFields.CONTENTS, mainQuery);
         }
@@ -55,13 +65,23 @@ public class SearchController {
         if(keywordsQuery != null && !"".equals(keywordsQuery)){
             searchQueriesRequest.getQueriesDictionary().put(DocFields.KEYWORDS, keywordsQuery);
         }
-        System.out.println(searchQueriesRequest.getQueriesDictionary());
-        //TODO send object to searcher
+        logger.info(searchQueriesRequest.getQueriesDictionary().toString());
 
-        List<String> results = new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            results.add(String.valueOf(i + 1));
+        List<ResultObject> results = new ArrayList<>();
+        try{
+            Searcher searcher = new Searcher();
+            results = searcher.search(searchQueriesRequest);
+            logger.info((results != null) ? String.valueOf(results.size()) : "null" );
+
+        } catch (IOException e){
+            logger.warning("Searcher cannot be created!");
+            e.printStackTrace();
+        } catch (ParseException e) {
+            logger.warning("Queries cannot be parsed!");
+            e.printStackTrace();
         }
+
+        model.addAttribute("searchForm", searchForm);
         model.addAttribute("results", results);
         return "search/results";
     }
