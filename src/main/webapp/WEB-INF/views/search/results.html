@@ -22,60 +22,49 @@
 
             <form th:action="@{/search/submit}" method="get" th:object="${searchForm}" id="searchForm">
                 <div class="row">
-                    <div id="div-logo">
-                        <span id="mainSearch">
-                            <img src="../../../resources/images/logo_mini.jpg" width="118" height="64"/>
-                            <span id="custom-search-input" align="center">
-                                <div class="input-group col-md-8">
-                                    <input type="text" class="  search-query form-control" placeholder="Seek"
-                                           th:field="*{mainQuery}"/>
-                                <span class="input-group-btn">
-                                    <button class="btn btn-danger" type="submit" form="searchForm">
-                                        <span class=" glyphicon glyphicon-search"></span>
-                                    </button>
-                                </span>
-                                </div>
+                    <div  class="col-md-1">
+                        <img src="../../../resources/images/logo_mini.jpg" width="71" height="36"/>
+                    </div>
+                    <div id="custom-search-input" class="col-md-7">
+                        <div class="input-group">
+                            <input type="text" class="  search-query form-control" placeholder="Seek"
+                                   th:field="*{mainQuery}"/>
+                            <span class="input-group-btn">
+                                <button class="btn btn-danger" type="submit" form="searchForm">
+                                    <span class=" glyphicon glyphicon-search"></span>
+                                </button>
                             </span>
-                            <span>
-                                <label for="qe-checkbox"><b>Query Expansion</b></label>
-                                <input type="checkbox" id="qe-checkbox" name="useQueryExp"  data-size="mini"
-                                       th:checked="${useQueryExpansion}"/>
-                            </span>
-                        </span>
+                        </div>
+                    </div>
+                    <div class="col-md-2" align="right">
+                        <label for="qe-checkbox" >QExp</label>
+                            <input type="checkbox" id="qe-checkbox" name="useQueryExp"  data-size="small"
+                                       th:checked="${useQueryExpansion}" checked="checked"/>
                     </div>
                 </div>
-                <div class="row">
 
-                </div>
-                <div class="row" id="qe-div">
-                    <div id="qe-div-child">
-
-                    </div>
-                </div>
-                <div class="row col-md-offset-2 advanced-search" align="left">
-                    <b>Advanced search</b>
-                </div>
                 <div class="row">
-                    <div id="title-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
+                    <div class="col-md-1"></div>
+                    <div id="title-input" align="center" class="col-md-3 advanced-search">
                         <input type="text" class="form-control" placeholder="Title" th:field="*{titleQuery}"/>
                     </div>
-                </div>
-                <div class="row">
-                    <div id="author-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
+                    <div id="author-input" align="center" class="col-md-3 advanced-search">
                         <input type="text" class="form-control" placeholder="Author" th:field="*{authorQuery}"/>
                     </div>
-                </div>
-                <div class="row">
-                    <div id="keywords-input" align="center" class="col-md-6 col-md-offset-2 advanced-search">
+                    <div id="keywords-input" align="center" class="col-md-3 advanced-search">
                         <input type="text" class="form-control" placeholder="Keywords" th:field="*{keywordsQuery}"/>
                     </div>
                 </div>
+
             </form>
-        <table>
-            <tr th:each="result : ${results}">
-                <td th:text="${result.title}"></td>
-            </tr>
-        </table>
+        <hr  size="4" color="black"/>
+        <div id="result-list">
+            <div class="row well col-md-10" th:each="result : ${results}">
+                <div ><a th:text="${ (result.rank + 1) + '. ' + result.title}" th:href="${result.path}"></a></div>
+                <div> <a href="#" th:text="${result.authors}"></a></div>
+                <div th:text="${result.summary}"></div>
+            </div>
+        </div>
 
 
         </div>

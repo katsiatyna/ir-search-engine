@@ -49,6 +49,8 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
                 String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
                // System.out.println("Lemma: " + lemma);
                 lemmaList.add(lemma);
+                String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+                // System.out.println("Lemma: " + lemma);
                 // this is the NER label of the token
                 String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
 //                System.out.println("NE: " + ne);
