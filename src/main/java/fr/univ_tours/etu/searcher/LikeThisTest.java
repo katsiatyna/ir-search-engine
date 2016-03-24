@@ -2,6 +2,7 @@
  *  This work is licensed for the ULB Group13 BKT for the DBSA course.
  */
 package fr.univ_tours.etu.searcher;
+  
 
 import java.io.IOException;
 import java.io.Reader;
