@@ -6,9 +6,7 @@ import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.util.CoreMap;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 /**
  * Created by Katherine on 19.03.2016.
@@ -19,8 +17,10 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
     protected Annotation document;
     protected List<String> neList;
     protected List<String> lemmaList;
+    protected Map<String,List<String>> lemmaPosMap;
 
     public CoreNlpTokenizer(Properties props) {
+
         pipeline = new StanfordCoreNLP(props);
     }
 
@@ -34,6 +34,7 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
         List<String> tokens = new ArrayList<>();
         lemmaList = new ArrayList<>();
         neList = new ArrayList<>();
+        lemmaPosMap = new HashMap<>();
         for (CoreMap sentence : sentences) {
             // traversing the words in the current sentence
             // a CoreLabel is a CoreMap with additional token-specific methods
@@ -50,7 +51,13 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
                // System.out.println("Lemma: " + lemma);
                 lemmaList.add(lemma);
                 String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
-                // System.out.println("Lemma: " + lemma);
+                if(lemmaPosMap.get(lemma) == null){
+                    lemmaPosMap.put(lemma, new ArrayList<>());
+                }
+                if(!lemmaPosMap.get(lemma).contains(pos)) {
+                    lemmaPosMap.get(lemma).add(pos);
+                }
+                //System.out.println("POS: " + lemma + ": " + pos);
                 // this is the NER label of the token
                 String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
 //                System.out.println("NE: " + ne);
@@ -153,5 +160,10 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
         }
         String lemmaString = sb.toString();
         return lemmaString.substring(0, lemmaString.length() - 1);
+    }
+
+    @Override
+    public Map<String, List<String>> getLemmaPosMap() {
+        return lemmaPosMap;
     }
 }

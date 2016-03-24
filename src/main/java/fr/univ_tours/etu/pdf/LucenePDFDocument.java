@@ -25,13 +25,11 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Properties;
+import java.util.*;
 
+import fr.univ_tours.etu.index.NlpSynoner;
 import fr.univ_tours.etu.index.Synoner;
 import fr.univ_tours.etu.nlp.*;
-import fr.univ_tours.etu.pdf.*;
 
 import org.apache.lucene.document.DateTools;
 import org.apache.lucene.document.Document;
@@ -40,7 +38,6 @@ import org.apache.lucene.document.FieldType;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexOptions;
-import org.apache.pdfbox.exceptions.InvalidPasswordException;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.util.PDFTextStripper;
@@ -124,6 +121,9 @@ public class LucenePDFDocument
     private PDFTextStripper stripper = null;
 	private Document readySynDoc;
 
+    private NlpNeTokenizer nlpNeTokenizer;
+    private Map<String, List<String>> lemmaPosMap;
+
     /** not Indexed, tokenized, stored. */
     public static final FieldType TYPE_STORED_NOT_INDEXED = new FieldType();
 
@@ -135,11 +135,16 @@ public class LucenePDFDocument
         TYPE_STORED_NOT_INDEXED.freeze();
     }
 
+    private List<String> lemmas;
+
     /**
      * Constructor.
      */
     public LucenePDFDocument()
     {
+        Properties props = new Properties();
+        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
+        nlpNeTokenizer = new CoreNlpTokenizer(props);
     }
 
     /**
@@ -272,6 +277,8 @@ public class LucenePDFDocument
             addContent(document, input, file.getPath());
             this.addSynonyms(synDoc);
             this.readySynDoc=synDoc;
+        } catch (Exception e){
+            e.printStackTrace();
         }
         finally
         {
@@ -386,8 +393,8 @@ public class LucenePDFDocument
     
     private void addSynonyms(Document doc) throws IOException
     {
-    	Synoner sn= new Synoner(this.extractedContent);
-		sn.Tokenize();
+    	Synoner sn= new NlpSynoner(lemmaPosMap, lemmas);
+		sn.tokenize();
 		String readySyn = sn.getSynText();
 		//System.out.println(readySyn);
 		StringReader reader = new StringReader(readySyn);
@@ -507,18 +514,14 @@ public class LucenePDFDocument
     /**
      * Gets all named-entities as TextField
      * @param text
-     * @param file
      * @return
      * @throws IOException
      */
     public TextField getNamedEntities(String text) throws IOException {
-
-        Properties props = new Properties();
-        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
-        NlpNeTokenizer nlpNeTokenizer = new CoreNlpTokenizer(props);
         nlpNeTokenizer.tokenize(text);
         String neString = nlpNeTokenizer.getNeString(";", false);
-
-        return new TextField(DocFields.NAMED_ENTITIES, neString, Field.Store.NO);        
+        lemmaPosMap = nlpNeTokenizer.getLemmaPosMap();
+        lemmas = nlpNeTokenizer.getLemmaList();
+        return new TextField(DocFields.NAMED_ENTITIES, neString, Field.Store.NO);
     }
 }
