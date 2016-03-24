@@ -1,7 +1,6 @@
 /*
  *  This work is licensed for the ULB Group13 BKT for the DBSA course.
  */
-
 package fr.univ_tours.etu.searcher;
 
 /**
@@ -9,7 +8,9 @@ package fr.univ_tours.etu.searcher;
  * @author Anas Alba
  */
 public class ResultObject {
-   
+
+    private Integer docID;
+
     private Integer rank;
     private String title;
     private String authors;
@@ -56,7 +57,16 @@ public class ResultObject {
         this.summary = summary;
     }
 
-    public ResultObject(Integer rank, String title, String authors, String path, String summary) {
+    public Integer getDocID() {
+        return docID;
+    }
+
+    public void setDocID(Integer docID) {
+        this.docID = docID;
+    }
+
+    public ResultObject(Integer ID,Integer rank, String title, String authors, String path, String summary) {
+        this.docID = ID;
         this.rank = rank;
         this.title = title;
         this.authors = authors;

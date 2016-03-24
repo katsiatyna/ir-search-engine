@@ -38,9 +38,10 @@ import org.apache.lucene.store.FSDirectory;
 public class Searcher {
 
     private final Properties props;
-    private final IndexReader reader;
+    private IndexReader reader;
     private final PerFieldAnalyzerWrapper analyzer;
     private final int numRetrievedDocs;
+    NlpNeTokenizer queryTokenizer;
 
     public Searcher() throws IOException {
         this.props = new Properties();
@@ -53,6 +54,7 @@ public class Searcher {
         this.analyzer = new PerFieldAnalyzerWrapper(
                 new StandardAnalyzer(), analyzerPerField);
         this.numRetrievedDocs = Integer.MAX_VALUE;
+        this.queryTokenizer = new CoreNlpTokenizer(props);
     }
 
     public Searcher(int numRetrievedDocs) throws IOException {
@@ -66,6 +68,7 @@ public class Searcher {
         this.analyzer = new PerFieldAnalyzerWrapper(
                 new StandardAnalyzer(), analyzerPerField);
         this.numRetrievedDocs = numRetrievedDocs;
+        this.queryTokenizer = new CoreNlpTokenizer(props);
     }
 
     public List<ResultObject> search(SearchQueriesRequest query) throws IOException, ParseException {
@@ -84,7 +87,6 @@ public class Searcher {
         }
 
         if (queriesDictionary.containsKey(DocFields.CONTENTS)) {
-            NlpNeTokenizer queryTokenizer = new CoreNlpTokenizer(props);
             queryTokenizer.tokenize(queriesDictionary.get(DocFields.CONTENTS));
             if (queryTokenizer.getNeList() != null && queryTokenizer.getNeList().size() != 0) {
                 fsa.add(DocFields.NAMED_ENTITIES);
@@ -100,38 +102,50 @@ public class Searcher {
 
         List<ResultObject> resultObjects = new ArrayList<>();
 
+        String result = "";
         for (int i = 0; i < hits.length; ++i) {
             int docId = hits[i].doc;
             if (useQueryExpansion) {
                 docsToExpand.add(docId);
             }
             Document d = searcher.doc(docId);
-            resultObjects.add(new ResultObject(i,
+            resultObjects.add(new ResultObject(docId, i,
                     d.get(DocFields.TITLE),
                     d.get(DocFields.AUTHOR),
                     d.get(DocFields.FILE_PATH),
                     d.get(DocFields.SUMMARY)));
+            result = d.get(DocFields.SUMMARY);
         }
 
         if (useQueryExpansion) {
+            reader.close();
+
+            this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
+            searcher = new IndexSearcher(reader);
             MoreLikeThis mlt = new MoreLikeThis(reader);
             mlt.setMinTermFreq(0);
             mlt.setMinDocFreq(0);
+            mlt.setAnalyzer(analyzer);
+            for (int i = 0; i < Math.min(docsToExpand.size(), 5); i++) {
 
-            for (Integer doc : docsToExpand) {
+                Reader r = new StringReader(resultObjects.get(i).getSummary());
+                Query expandedQuery = mlt.like(DocFields.CONTENTS, r);
 
-                Query expandedQuery = mlt.like(doc);
-
-                TopDocs topDocs = searcher.search(expandedQuery, 1);
+                TopDocs topDocs = searcher.search(expandedQuery, 5);
 
                 for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
-                    Document aSimilar = searcher.doc(scoreDoc.doc);
+                    if (!docsToExpand.contains(scoreDoc.doc)) {
+                        docsToExpand.add(scoreDoc.doc);
+                        Document aSimilar = searcher.doc(scoreDoc.doc);
 
-                    resultObjects.add(new ResultObject(10,
-                            aSimilar.get(DocFields.TITLE),
-                            aSimilar.get(DocFields.AUTHOR),
-                            aSimilar.get(DocFields.FILE_PATH),
-                            aSimilar.get(DocFields.SUMMARY)));
+                        resultObjects.add(new ResultObject(1, resultObjects.size(),
+                                aSimilar.get(DocFields.TITLE),
+                                aSimilar.get(DocFields.AUTHOR),
+                                aSimilar.get(DocFields.FILE_PATH),
+                                aSimilar.get(DocFields.SUMMARY)));
+                    } else {
+                    }
+
                 }
             }
         }
