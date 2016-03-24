@@ -72,12 +72,12 @@ public class ParserTest {
 //            pdfStripper.setEndPage(10);
 //            text = pdfStripper.getText(pdDoc);
             testDictionary();
-           // testOpenNlp(text, file);
+            // testOpenNlp(text, file);
 
             System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
-        } 
+        }
 //        catch (ParseException e) {
 //            e.printStackTrace();
 //        }
@@ -150,24 +150,25 @@ public class ParserTest {
     }*/
 
 
+    public static void testDictionary() throws IOException {
+        //String wnhome = System.getenv("WNHOME");
+        String wnhome="c:\\Users\\Katherine\\Documents\\2nd sem\\IR\\project\\WordNet_3.1";
+        String path = wnhome + File.separator + "dict";
 
 
-        public static void testDictionary() throws IOException {
-            //String wnhome = System.getenv("WNHOME");
-        	String wnhome="/Users/Ward/Downloads";
-            String path = wnhome + File.separator + "dict";
-            
-            
-            URL url = new URL("file", null, path);
+        URL url = new URL("file", null, path);
 
-            IDictionary dictionary = new Dictionary(url);
-            dictionary.open();
-             // /Users/Ward/Downloads
-            IIndexWord indexWord = dictionary.getIndexWord("test", POS.NOUN);
-            
-            
-            IWordID wordID = indexWord.getWordIDs().get(0);
+        IDictionary dictionary = new Dictionary(url);
+        dictionary.open();
+        // /Users/Ward/Downloads
+        IIndexWord indexWord = dictionary.getIndexWord("use", POS.VERB);
+
+        for (IWordID wordID : indexWord.getWordIDs()) {
+
             IWord word = dictionary.getWord(wordID);
+            for (IWord word1 : word.getSynset().getWords()) {
+                System.out.println(word1.getLemma());
+            }
 //            System.out.println("Id = " + wordID);
 //            System.out.println(" Lemma = " + word.getLemma());
 //            System.out.println(" Gloss = " + word.getSynset().getGloss());
@@ -187,7 +188,7 @@ public class ParserTest {
                 System.out.println("}");
             }
         }
-        
     }
+}
 
 

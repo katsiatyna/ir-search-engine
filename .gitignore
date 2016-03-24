@@ -7,7 +7,3 @@ target/
 .settings/org.eclipse.m2e.core.prefs
 .classpath
 src/main/resources/indexdir/
-src/main/resources/indexdir/_0.cfe
-src/main/resources/indexdir/_0.cfe
-*.cfs
-src/main/resources/indexdir/_0.si
