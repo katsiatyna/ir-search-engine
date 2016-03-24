@@ -178,6 +178,16 @@ public class LucenePDFDocument
         }
     }
 
+    private void addTextField(Document document, String name, Reader value, float boost)
+    {
+        if (value != null)
+        {
+            TextField textField = new TextField(name, value);
+            textField.setBoost(boost);
+            document.add(textField);
+        }
+    }
+
     private void addTextField(Document document, String name, String value)
     {
         if (value != null)
@@ -253,30 +263,31 @@ public class LucenePDFDocument
     public Document convertDocument(File file) throws IOException
     {
         Document document = new Document();
-        Document synDoc = new Document();
+        //Document synDoc = new Document();
 
         // Add the url as a field named "url". Use an UnIndexed field, so
         // that the url is just stored with the document, but is not searchable.
         addUnindexedField(document, DocFields.FILE_PATH, file.getPath());
         addUnindexedField(document, DocFields.FILE_NAME, file.getName());
         
-        addUnindexedField(synDoc, DocFields.FILE_PATH, file.getPath());
-        addUnindexedField(synDoc, DocFields.FILE_NAME, file.getName());
+        //addUnindexedField(synDoc, DocFields.FILE_PATH, file.getPath());
+        //addUnindexedField(synDoc, DocFields.FILE_NAME, file.getName());
       
        // addKeywordField(document, "modified", timeToString(file.lastModified()));
 
         String uid = createUID(file);
 
         addUnstoredKeywordField(document, DocFields.UID, uid);
-        addUnstoredKeywordField(synDoc, DocFields.UID, uid);
+        //addUnstoredKeywordField(synDoc, DocFields.UID, uid);
 
         FileInputStream input = null;
         try
         {
             input = new FileInputStream(file);
             addContent(document, input, file.getPath());
-            this.addSynonyms(synDoc);
-            this.readySynDoc=synDoc;
+            //this.addSynonyms(synDoc);
+            this.addSynonyms(document);
+            //this.readySynDoc=synDoc;
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -398,7 +409,7 @@ public class LucenePDFDocument
 		String readySyn = sn.getSynText();
 		//System.out.println(readySyn);
 		StringReader reader = new StringReader(readySyn);
-        addTextField(doc, DocFields.SYNONYMS, reader);
+        addTextField(doc, DocFields.SYNONYMS, reader, 0.5f);
     }
 
     /**

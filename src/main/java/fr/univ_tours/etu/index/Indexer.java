@@ -32,7 +32,7 @@ import org.apache.lucene.index.IndexWriterConfig;
 public class Indexer {
 
    private IndexWriter writer;
-   private IndexWriter synWriter;
+   //private IndexWriter synWriter;
 
    /**
     * Gets the path to the PDF files directory
@@ -60,7 +60,7 @@ public class Indexer {
       
        Directory synDirectory = FSDirectory.open((new File(DocFields.SYN_DIR)).toPath());
        WhitespaceAnalyzer synAnalyzer = new WhitespaceAnalyzer();
-       synWriter = new IndexWriter(synDirectory, new IndexWriterConfig(synAnalyzer));
+       //synWriter = new IndexWriter(synDirectory, new IndexWriterConfig(synAnalyzer));
  
    }
    
@@ -92,7 +92,7 @@ public class Indexer {
       
       Document document= lpd.convertDocument(file);
       writer.addDocument(document);
-      this.synWriter.addDocument(lpd.getSynDoc());
+      //this.synWriter.addDocument(lpd.getSynDoc());
       
    }
    

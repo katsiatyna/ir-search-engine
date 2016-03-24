@@ -10,17 +10,18 @@
     <link href="../../../resources/css/core.css" rel="stylesheet" media="screen" th:href="@{/resources/css/core.css}"/>
 </head>
 <body>
-<div th:replace="fragments/header :: header">&nbsp;</div>
+<!--<div th:replace="fragments/header :: header">&nbsp;</div>-->
 <div class="container">
-    <!-- /* Handle the flash message */-->
+     <!--/* Handle the flash message */-->
     <th:block th:if="${message != null}">
         <!-- /* The message code is returned from the @Controller */ -->
         <div th:replace="fragments/alert :: alert (type=${#strings.toLowerCase(message.type)}, message=#{${message.message}(${#authentication.name})})">
             &nbsp;</div>
     </th:block>
-    <div class="container">
+    <!--<div class="container">-->
 
-            <form th:action="@{/search/submit}" method="get" th:object="${searchForm}" id="searchForm">
+            <form th:action="@{/search/submit}" method="get" th:object="${searchForm}" id="searchForm"
+                  class="">
                 <div class="row">
                     <div  class="col-md-1">
                         <img src="../../../resources/images/logo_mini.jpg" width="71" height="36"/>
@@ -67,7 +68,7 @@
         </div>
 
 
-        </div>
+        <!--</div>-->
     </div>
     <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
     <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
