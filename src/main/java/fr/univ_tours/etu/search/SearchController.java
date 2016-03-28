@@ -55,6 +55,7 @@ public class SearchController {
         logger.info("UseQueryExpansion: " + searchForm.isUseQueryExpansion());
         if(mainQuery != null && !"".equals(mainQuery)){
             searchQueriesRequest.getQueriesDictionary().put(DocFields.CONTENTS, mainQuery);
+            searchQueriesRequest.getQueriesDictionary().put(DocFields.SYNONYMS, mainQuery);
         }
         if(titleQuery != null && !"".equals(titleQuery)){
             searchQueriesRequest.getQueriesDictionary().put(DocFields.TITLE, titleQuery);
