@@ -435,7 +435,9 @@ public class LucenePDFDocument
             }
             stripper.writeText(pdfDocument, writer);
 
-            String contents = writer.getBuffer().toString();
+            String contentsDirty = writer.getBuffer().toString();
+            String contents = contentsDirty.replaceAll("\\p{C}|\\p{Sm}|\\p{Sk}|\\p{So}", " ");
+            System.out.println(contents);
 
             // addTextField(document, DocFields.CONTENTS, reader);
             TextField ne= this.getNamedEntities(contents);

@@ -48,7 +48,7 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
                 String word = token.get(CoreAnnotations.TextAnnotation.class);
                 //System.out.println("Word: " + word);
                 String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
-               // System.out.println("Lemma: " + lemma);
+                //System.out.println("Lemma: " + lemma);
                 lemmaList.add(lemma);
                 String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
                 if(lemmaPosMap.get(lemma) == null){

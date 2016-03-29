@@ -46,14 +46,14 @@ import java.util.*;
  */
 public class ParserTest {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         PDFParser parser;
         PDFTextStripper pdfStripper;
         PDDocument pdDoc;
         COSDocument cosDoc;
 
         String text;
-        String filePath = "src/main/resources/test_docs/N13-1041.pdf";
+        String filePath = "c:\\Users\\Katherine\\Documents\\2nd sem\\IR\\project\\IR CORPUS DOCS\\1201.0409.pdf";
         File file;
 
         pdfStripper = null;
@@ -62,17 +62,19 @@ public class ParserTest {
 
         file = new File(filePath);
         try {
-//            parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
-//            parser.parse();
-//            cosDoc = parser.getDocument();
-//            pdfStripper = new PDFTextStripper();
-//            pdDoc = new PDDocument(cosDoc);
-//            pdDoc.getNumberOfPages();
-//            pdfStripper.setStartPage(1);
-//            pdfStripper.setEndPage(10);
-//            text = pdfStripper.getText(pdDoc);
-            testDictionary();
-            // testOpenNlp(text, file);
+            parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
+            parser.parse();
+            cosDoc = parser.getDocument();
+            pdfStripper = new PDFTextStripper();
+            pdDoc = new PDDocument(cosDoc);
+            pdDoc.getNumberOfPages();
+            //pdfStripper.setStartPage(1);
+            //pdfStripper.setEndPage(10);
+            text = pdfStripper.getText(pdDoc);
+            String resultString = text.replaceAll("\\p{C}|\\p{Sm}|\\p{Sk}|\\p{So}", " ");
+
+            //testDictionary();
+            testOpenNlp(resultString);
 
             System.out.println();
         } catch (IOException e) {
@@ -83,8 +85,8 @@ public class ParserTest {
 //        }
     }
 
-    /*
-    public static void testOpenNlp(String text, File file) throws IOException, ParseException {
+
+    public static void testOpenNlp(String text) throws IOException, ParseException {
 
         Properties props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
@@ -103,7 +105,7 @@ public class ParserTest {
         //analyzerPerField.put("someotherfield", new SomeOtherAnalyzer());
 
         // create a per-field analyzer wrapper using the StandardAnalyzer as .. standard analyzer ;)
-        PerFieldAnalyzerWrapper analyzer = new PerFieldAnalyzerWrapper(
+        /*PerFieldAnalyzerWrapper analyzer = new PerFieldAnalyzerWrapper(
                 new StandardAnalyzer(), analyzerPerField);
         Document luceneDocument = LucenePDFDocument.getDocument(file);
         Directory index = new RAMDirectory();
@@ -146,8 +148,8 @@ public class ParserTest {
         //}
 
 
-
-    }*/
+*/
+    }
 
 
     public static void testDictionary() throws IOException {

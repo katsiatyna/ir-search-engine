@@ -107,12 +107,13 @@ public class Indexer {
     * @throws TikaException
     * @throws SAXException
     */
-   public int createIndex(String dataDirPath) 
+   public int createIndex(String dataDirPath, int numDocs)
       throws IOException{
       //get all files in the data directory
       File[] files = new File(dataDirPath).listFiles();
-       int i = 1;
-      for (File file : files) {
+       int i = 0;
+      while(i < numDocs) {
+          File file = files[i];
          if(!file.isDirectory()
             && !file.isHidden()
             && file.exists()
@@ -133,10 +134,11 @@ public class Indexer {
 	   //String dataDir = "src/main/resources/test_docs";
        String dataDir = "c:\\Users\\Katherine\\Documents\\2nd sem\\IR\\project\\IR CORPUS DOCS\\";
 	   try {
+          int numDocs = 100;
 		Indexer indexer =new Indexer(indexDir);
 		int numIndexed;
 	      long startTime = System.currentTimeMillis();	
-	      numIndexed = indexer.createIndex(dataDir);
+	      numIndexed = indexer.createIndex(dataDir, numDocs);
 	      long endTime = System.currentTimeMillis();
 	      indexer.close();
 	      System.out.println(numIndexed+" File indexed, time taken: "
