@@ -436,7 +436,8 @@ public class LucenePDFDocument
             stripper.writeText(pdfDocument, writer);
 
             String contentsDirty = writer.getBuffer().toString();
-            String contents = contentsDirty.replaceAll("\\p{C}|\\p{Sm}|\\p{Sk}|\\p{So}", " ");
+            System.out.println(contentsDirty.substring(0,100));
+            String contents = contentsDirty.replaceAll("\\p{Sm}|\\p{Sk}|\\p{So}", " ");
             System.out.println(contents);
 
             // addTextField(document, DocFields.CONTENTS, reader);
@@ -532,6 +533,7 @@ public class LucenePDFDocument
     public TextField getNamedEntities(String text) throws IOException {
         nlpNeTokenizer.tokenize(text);
         String neString = nlpNeTokenizer.getNeString(";", false);
+        System.out.println(neString);
         lemmaPosMap = nlpNeTokenizer.getLemmaPosMap();
         lemmas = nlpNeTokenizer.getLemmaList();
         return new TextField(DocFields.NAMED_ENTITIES, neString, Field.Store.NO);
