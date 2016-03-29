@@ -112,7 +112,6 @@ import fr.univ_tours.etu.nlp.NlpNeTokenizer;
 public class LucenePDFDocument
 {
     private static final char FILE_SEPARATOR = System.getProperty("file.separator").charAt(0);
-    private String extractedContent="";
 
     // given caveat of increased search times when using
     // MICROSECOND, only use SECOND by default
@@ -437,23 +436,23 @@ public class LucenePDFDocument
             stripper.writeText(pdfDocument, writer);
 
             String contents = writer.getBuffer().toString();
-            this.extractedContent=contents;
-            //System.out.println(contents);
 
-            StringReader reader = new StringReader(contents);
+            // addTextField(document, DocFields.CONTENTS, reader);
+            TextField ne= this.getNamedEntities(contents);
+
+            String lemmas = nlpNeTokenizer.getLemmaString();
+
+            //StringReader reader = new StringReader(contents);
+            StringReader reader = new StringReader(lemmas);
 
             // Add the tag-stripped contents as a Reader-valued Text field so it will
             // get tokenized and indexed.
-            
+
             FieldType type = new FieldType();
             type.setIndexOptions(IndexOptions.DOCS_AND_FREQS_AND_POSITIONS_AND_OFFSETS);
             type.setStored(false);
             type.setTokenized(true);
             document.add(new Field(DocFields.CONTENTS, reader, type));
-            
-            
-           // addTextField(document, DocFields.CONTENTS, reader);
-            TextField ne= this.getNamedEntities(contents);
 
             PDDocumentInformation info = pdfDocument.getDocumentInformation();
             if (info != null)

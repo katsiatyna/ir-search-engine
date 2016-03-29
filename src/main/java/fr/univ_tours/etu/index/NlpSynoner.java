@@ -154,7 +154,7 @@ public class NlpSynoner implements Synoner {
         }
         //System.out.println(tkn);
         dictionary.close();
-        System.out.println(synContent);
+        //System.out.println(synContent);
     }
 
     private String modified(final String input){

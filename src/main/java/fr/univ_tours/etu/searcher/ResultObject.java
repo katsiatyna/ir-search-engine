@@ -16,6 +16,7 @@ public class ResultObject {
     private String authors;
     private String path;
     private String summary;
+    private String fileName;
 
     public Integer getRank() {
         return rank;
@@ -65,12 +66,21 @@ public class ResultObject {
         this.docID = docID;
     }
 
-    public ResultObject(Integer ID,Integer rank, String title, String authors, String path, String summary) {
+    public ResultObject(Integer ID,Integer rank, String title, String authors, String path, String summary, String fileName) {
         this.docID = ID;
         this.rank = rank;
         this.title = title;
         this.authors = authors;
         this.path = path;
         this.summary = summary;
+        this.fileName = fileName;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

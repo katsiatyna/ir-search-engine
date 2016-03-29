@@ -6,6 +6,7 @@ package fr.univ_tours.etu.searcher;
 import fr.univ_tours.etu.nlp.CoreNlpTokenizer;
 import fr.univ_tours.etu.nlp.NlpNeTokenizer;
 import fr.univ_tours.etu.nlp.SemicolonAnalyzer;
+import fr.univ_tours.etu.pdf.DocFields;
 import fr.univ_tours.etu.search.SearchQueriesRequest;
 import java.io.File;
 import java.io.IOException;
@@ -37,15 +38,19 @@ import org.apache.lucene.store.FSDirectory;
  */
 public class Searcher {
 
-    private final Properties props;
+    private static final Properties props;
     private IndexReader reader;
     private final PerFieldAnalyzerWrapper analyzer;
     private final int numRetrievedDocs;
-    NlpNeTokenizer queryTokenizer;
+    static NlpNeTokenizer queryTokenizer;
+
+    static {
+        props = new Properties();
+        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
+        queryTokenizer = new CoreNlpTokenizer(props);
+    }
 
     public Searcher() throws IOException {
-        this.props = new Properties();
-        this.props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
 
         this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
 
@@ -54,12 +59,10 @@ public class Searcher {
         this.analyzer = new PerFieldAnalyzerWrapper(
                 new StandardAnalyzer(), analyzerPerField);
         this.numRetrievedDocs = Integer.MAX_VALUE;
-        this.queryTokenizer = new CoreNlpTokenizer(props);
+
     }
 
     public Searcher(int numRetrievedDocs) throws IOException {
-        this.props = new Properties();
-        this.props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
 
         this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
 
@@ -68,7 +71,7 @@ public class Searcher {
         this.analyzer = new PerFieldAnalyzerWrapper(
                 new StandardAnalyzer(), analyzerPerField);
         this.numRetrievedDocs = numRetrievedDocs;
-        this.queryTokenizer = new CoreNlpTokenizer(props);
+
     }
 
     public List<ResultObject> search(SearchQueriesRequest query) throws IOException, ParseException {
@@ -79,18 +82,24 @@ public class Searcher {
 
         List<String> fsa = new ArrayList<>();
         List<String> qsa = new ArrayList<>();
-
-        int counter = 0;
-        for (Map.Entry<String, String> entry : queriesDictionary.entrySet()) {
-            fsa.add(entry.getKey());
-            qsa.add(entry.getValue());
-        }
-
+        String contentLemmas = "";
         if (queriesDictionary.containsKey(DocFields.CONTENTS)) {
             queryTokenizer.tokenize(queriesDictionary.get(DocFields.CONTENTS));
+            contentLemmas = queryTokenizer.getLemmaString();
+            System.out.println("Lemmas: " + contentLemmas);
             if (queryTokenizer.getNeList() != null && queryTokenizer.getNeList().size() != 0) {
                 fsa.add(DocFields.NAMED_ENTITIES);
                 qsa.add(queryTokenizer.getNeString(";", true));
+            }
+        }
+
+        for (Map.Entry<String, String> entry : queriesDictionary.entrySet()) {
+            fsa.add(entry.getKey());
+            if(entry.getKey().equals(DocFields.CONTENTS)
+                    || entry.getKey().equals(DocFields.SYNONYMS)){
+                qsa.add(contentLemmas);
+            }else {
+                qsa.add(entry.getValue());
             }
         }
 
@@ -113,7 +122,8 @@ public class Searcher {
                     d.get(DocFields.TITLE),
                     d.get(DocFields.AUTHOR),
                     d.get(DocFields.FILE_PATH),
-                    d.get(DocFields.SUMMARY)));
+                    d.get(DocFields.SUMMARY),
+                    d.get(DocFields.FILE_NAME)));
             result = d.get(DocFields.SUMMARY);
         }
 
@@ -142,7 +152,8 @@ public class Searcher {
                                 aSimilar.get(DocFields.TITLE),
                                 aSimilar.get(DocFields.AUTHOR),
                                 aSimilar.get(DocFields.FILE_PATH),
-                                aSimilar.get(DocFields.SUMMARY)));
+                                aSimilar.get(DocFields.SUMMARY),
+                                aSimilar.get(DocFields.FILE_NAME)));
                     } else {
                     }
 

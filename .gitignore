@@ -7,3 +7,5 @@ target/
 .settings/org.eclipse.m2e.core.prefs
 .classpath
 src/main/resources/indexdir/
+IR CORPUS DOCS/
+*.pdf

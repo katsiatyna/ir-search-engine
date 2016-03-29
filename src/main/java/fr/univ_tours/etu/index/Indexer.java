@@ -84,8 +84,8 @@ public class Indexer {
    }
 
 
-   private void indexFile(File file) throws IOException{
-      System.out.println("Indexing "+file.getCanonicalPath());
+   private void indexFile(File file, int i) throws IOException{
+      System.out.println(i + ". Indexing "+file.getCanonicalPath());
 //      TikaParser tp= new TikaParser(file);
 //      Document document = tp.getDocument();
       LucenePDFDocument lpd= new LucenePDFDocument();
@@ -111,15 +111,16 @@ public class Indexer {
       throws IOException{
       //get all files in the data directory
       File[] files = new File(dataDirPath).listFiles();
-
+       int i = 1;
       for (File file : files) {
          if(!file.isDirectory()
             && !file.isHidden()
             && file.exists()
             && file.canRead()){
         	// System.out.println("NOW FILE: " + file.getName());
-            indexFile(file);
+            indexFile(file, i);
             //indexSynonyms(file);
+             i++;
          }
       }
       return writer.numDocs();
@@ -129,7 +130,8 @@ public class Indexer {
    public static void main(String[] args) {
 	   
 	   String indexDir = "src/main/resources/indexdir";
-	   String dataDir = "src/main/resources/test_docs";
+	   //String dataDir = "src/main/resources/test_docs";
+       String dataDir = "c:\\Users\\Katherine\\Documents\\2nd sem\\IR\\project\\IR CORPUS DOCS\\";
 	   try {
 		Indexer indexer =new Indexer(indexDir);
 		int numIndexed;
