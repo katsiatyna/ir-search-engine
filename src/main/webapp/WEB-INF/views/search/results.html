@@ -38,10 +38,17 @@
                             </span>
                         </div>
                     </div>
-                    <div class="col-md-2" align="right" style="vertical-align:middle;">
+                    <div class="col-md-2" style="vertical-align:middle;">
+                        <div align="right">
                         <label for="qe-checkbox">Q Exp</label>
-                            <input type="checkbox" id="qe-checkbox" name="useQueryExp"  data-size="small"
+                            <input type="checkbox" id="qe-checkbox" name="useQueryExp"  data-size="mini"
                                        th:checked="${searchForm.useQueryExpansion}" />
+                        </div>
+                        <div align="right">
+                        <label for="wn-checkbox">Wn</label>
+                        <input type="checkbox" id="wn-checkbox" name="useWordNet"  data-size="mini"
+                               th:checked="${searchForm.useWordNet}" />
+                        </div>
                     </div>
                 </div>
 
@@ -79,6 +86,9 @@
     <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
     <script src="../../../resources/js/bootstrap-switch.min.js"
             th:src="@{/resources/js/bootstrap-switch.min.js}"></script>
-    <script>$("[name='useQueryExp']").bootstrapSwitch();</script>
+    <script>
+    $("[name='useQueryExp']").bootstrapSwitch();
+    $("[name='useWordNet']").bootstrapSwitch();
+    </script>
 </body>
 </html>

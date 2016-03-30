@@ -9,3 +9,4 @@ target/
 src/main/resources/indexdir/
 IR CORPUS DOCS/
 *.pdf
+src/main/resources/synindexdir/

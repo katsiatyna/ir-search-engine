@@ -39,6 +39,7 @@ public class SearchController {
     @RequestMapping(value = "/submit", method = RequestMethod.GET)
     public String submitQuery(@ModelAttribute("searchForm") SearchForm searchForm,
                               @RequestParam(value = "useQueryExp", required = false) String useQuryExp,
+                              @RequestParam(value = "useWordNet", required = false) String useWordNet,
                               Model model) {
         String mainQuery = searchForm.getMainQuery();
         String titleQuery = searchForm.getTitleQuery();
@@ -56,7 +57,12 @@ public class SearchController {
         logger.info("UseQueryExpansion: " + searchForm.isUseQueryExpansion());
         if(mainQuery != null && !"".equals(mainQuery)){
             searchQueriesRequest.getQueriesDictionary().put(DocFields.CONTENTS, mainQuery);
-            searchQueriesRequest.getQueriesDictionary().put(DocFields.SYNONYMS, mainQuery);
+            if(useWordNet != null && useWordNet.equals("on")) {
+                searchQueriesRequest.getQueriesDictionary().put(DocFields.SYNONYMS, mainQuery);
+                searchForm.setUseWordNet(true);
+            }else {
+                searchForm.setUseWordNet(false);
+            }
         }
         if(titleQuery != null && !"".equals(titleQuery)){
             searchQueriesRequest.getQueriesDictionary().put(DocFields.TITLE, titleQuery);

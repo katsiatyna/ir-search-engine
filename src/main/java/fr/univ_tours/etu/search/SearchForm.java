@@ -10,6 +10,7 @@ public class SearchForm {
     protected String authorQuery;
     protected String keywordsQuery;
     protected boolean useQueryExpansion = true;
+    protected boolean useWordNet = true;
 
     public String getMainQuery() {
         return mainQuery;
@@ -49,5 +50,13 @@ public class SearchForm {
 
     public void setUseQueryExpansion(boolean useQueryExpansion) {
         this.useQueryExpansion = useQueryExpansion;
+    }
+
+    public boolean isUseWordNet() {
+        return useWordNet;
+    }
+
+    public void setUseWordNet(boolean useWordNet) {
+        this.useWordNet = useWordNet;
     }
 }

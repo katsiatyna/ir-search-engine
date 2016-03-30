@@ -47,6 +47,11 @@
                         <input type="checkbox" id="qe-checkbox" name="useQueryExp" checked="checked" data-size="mini"
                         />
                     </span>
+                    <span>
+                        <label for="wn-checkbox"><b>   WordNet</b></label>
+                        <input type="checkbox" id="wn-checkbox" name="useWordNet" checked="checked" data-size="mini"
+                        />
+                    </span>
                 </div>
             </div>
             <div class="row col-md-offset-2 advanced-search" align="left">
@@ -79,6 +84,7 @@
 
 <script>
 $("[name='useQueryExp']").bootstrapSwitch();
+$("[name='useWordNet']").bootstrapSwitch();
 $("[name='useQueryExp']").change(function(){
     $("[name='my-hidden']").val($(this).val());
 });

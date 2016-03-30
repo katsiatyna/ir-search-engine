@@ -64,7 +64,7 @@ public class ParserTest {
 
         //file = new File(filePath);
 
-        String mainQuery = "linguistics AND abstract AND human";
+        String mainQuery = "Association for Computational Linguistics";
         String titleQuery = null;
         String authorsQuery = null;
         String keywordsQuery = null;
