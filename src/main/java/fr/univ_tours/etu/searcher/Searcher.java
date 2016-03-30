@@ -89,8 +89,11 @@ public class Searcher {
             System.out.println("Lemmas: " + contentLemmas);
             if (queryTokenizer.getNeList() != null && queryTokenizer.getNeList().size() != 0) {
                 fsa.add(DocFields.NAMED_ENTITIES);
-                qsa.add(queryTokenizer.getNeString(";", true));
+                String  neString = queryTokenizer.getNeString(";", true);
+                qsa.add(neString);
+                System.out.println("NE: " + neString);
             }
+
         }
 
         for (Map.Entry<String, String> entry : queriesDictionary.entrySet()) {
@@ -106,7 +109,7 @@ public class Searcher {
         Query q = MultiFieldQueryParser.parse(qsa.toArray(new String[qsa.size()]), fsa.toArray(new String[fsa.size()]), analyzer);
 
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs docs = searcher.search(q, 10);
+        TopDocs docs = searcher.search(q, 1000);
         ScoreDoc[] hits = docs.scoreDocs;
 
         List<ResultObject> resultObjects = new ArrayList<>();

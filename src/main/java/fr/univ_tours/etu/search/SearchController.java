@@ -84,7 +84,13 @@ public class SearchController {
         }
 
         model.addAttribute("searchForm", searchForm);
+        model.addAttribute("numDocs", (results != null) ? results.size() : 0);
+        //show only 20 results
+        if(results != null && results.size() > 20){
+            results = results.subList(0,20);
+        }
         model.addAttribute("results", results);
+
         return "search/results";
     }
 

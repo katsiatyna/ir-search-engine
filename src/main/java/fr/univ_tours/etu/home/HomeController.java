@@ -28,7 +28,7 @@ public class HomeController {
             @PathVariable("file_name") String fileName) {
         try {
             // get your file as InputStream
-            String rootPath = "c:\\Users\\Katherine\\Documents\\2nd sem\\IR\\project\\ir-search-engine\\src\\main\\resources\\test_docs\\";
+            String rootPath = "c:\\Users\\Katherine\\Documents\\2nd sem\\IR\\project\\IR CORPUS DOCS\\";
             File file = new File(rootPath + fileName);
             InputStream is = new FileInputStream(file);
             // copy it to response's OutputStream

@@ -61,6 +61,7 @@
             </form>
         <hr  size="4" color="black"/>
         <div id="result-list">
+            <div th:text="'Number of documents: ' + ${numDocs}"></div>
             <div class="row well col-md-10" th:each="result : ${results}">
                 <div ><a th:text="${ (result.rank + 1) + '. ' + result.title}"
                          th:href="'/files/' + ${result.fileName}"
