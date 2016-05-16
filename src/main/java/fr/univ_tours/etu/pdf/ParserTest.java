@@ -74,7 +74,11 @@ public class ParserTest {
             String resultString = text.replaceAll("\\p{C}|\\p{Sm}|\\p{Sk}|\\p{So}", " ");
 
             //testDictionary();
-            testOpenNlp(resultString);
+            testOpenNlp("anas al bassit");
+            testOpenNlp("Anas Al Bassit");
+            testOpenNlp("barack obama");
+            testOpenNlp("Barack Obama");
+
 
             System.out.println();
         } catch (IOException e) {
@@ -90,6 +94,10 @@ public class ParserTest {
 
         Properties props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
+        props.put("pos.model", "edu/stanford/nlp/models/pos-tagger/english-caseless-left3words-distsim.tagger");
+        props.put("parse.model", "edu/stanford/nlp/models/lexparser/englishPCFG.caseless.ser.gz");
+        props.put("ner.model", "edu/stanford/nlp/models/ner/english.muc.7class.caseless.distsim.crf.ser.gz");
+        //props.put("ner.model", "edu/stanford/nlp/models/ner/english.all.3class.caseless.distsim.crf.ser.gz edu/stanford/nlp/models/ner/english.muc.7class.caseless.distsim.crf.ser.gz edu/stanford/nlp/models/ner/english.conll.4class.caseless.distsim.crf.ser.gz");
         NlpNeTokenizer nlpNeTokenizer = new CoreNlpTokenizer(props);
         nlpNeTokenizer.tokenize(text);
         List<String> neList = nlpNeTokenizer.getNeList();

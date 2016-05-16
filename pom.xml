@@ -73,7 +73,14 @@
 	<artifactId>tika-parsers</artifactId>
 	<version>1.12</version>
 </dependency>
-<!--  Lucene Standard Analyzer: test -->
+        <!-- http://mvnrepository.com/artifact/org.apache.tika/tika-core -->
+        <dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-core</artifactId>
+            <version>1.12</version>
+        </dependency>
+
+        <!--  Lucene Standard Analyzer: test -->
 <dependency>
 	<groupId>org.apache.lucene</groupId>
 	<artifactId>lucene-analyzers-common</artifactId>
@@ -233,7 +240,8 @@
             <groupId>edu.stanford.nlp</groupId>
             <artifactId>stanford-corenlp</artifactId>
             <version>3.6.0</version>
-            <classifier>models</classifier>
+            <classifier>models-english</classifier>
+
         </dependency>
     </dependencies>
     <build>

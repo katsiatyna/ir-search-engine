@@ -76,6 +76,70 @@ public class SearchController {
         logger.info(searchQueriesRequest.getQueriesDictionary().toString());
 
         List<ResultObject> results = new ArrayList<>();
+        /*try{
+            Searcher searcher = new Searcher();
+            results = searcher.search(searchQueriesRequest);
+            logger.info((results != null) ? String.valueOf(results.size()) : "null" );
+
+        } catch (IOException e){
+            logger.warning("Searcher cannot be created!");
+            e.printStackTrace();
+        } catch (ParseException e) {
+            logger.warning("Queries cannot be parsed!");
+            e.printStackTrace();
+        }
+*/
+        model.addAttribute("searchForm", searchForm);
+        //model.addAttribute("numDocs", (results != null) ? results.size() : 0);
+        //show only 20 results
+        /*if(results != null && results.size() > 20){
+            results = results.subList(0,20);
+        }*/
+        //model.addAttribute("results", results);
+
+        return "search/results";
+    }
+
+    @RequestMapping(value = "/submitAsync", method = RequestMethod.GET)
+    public String submitQueryAsync(@ModelAttribute("searchForm") SearchForm searchForm,
+                              @RequestParam(value = "useQueryExp", required = false) String useQuryExp,
+                              @RequestParam(value = "useWordNet", required = false) String useWordNet,
+                              Model model) {
+        String mainQuery = searchForm.getMainQuery();
+        String titleQuery = searchForm.getTitleQuery();
+        String authorsQuery = searchForm.getAuthorQuery();
+        String keywordsQuery = searchForm.getKeywordsQuery();
+        logger.info("Main Query: " + mainQuery);
+        logger.info("Title Query: " + titleQuery);
+        logger.info("Author Query: " + authorsQuery);
+        logger.info("Keywords Query: " + keywordsQuery);
+        logger.info("Use Query Expansion: " + useQuryExp);
+        SearchQueriesRequest searchQueriesRequest = new SearchQueriesRequest();
+        searchQueriesRequest.setUseQueryExpansion(useQuryExp != null && useQuryExp.equals("on"));
+
+        searchForm.setUseQueryExpansion(searchQueriesRequest.isUseQueryExpansion());
+        logger.info("UseQueryExpansion: " + searchForm.isUseQueryExpansion());
+        if(mainQuery != null && !"".equals(mainQuery)){
+            searchQueriesRequest.getQueriesDictionary().put(DocFields.CONTENTS, mainQuery);
+            if(useWordNet != null && useWordNet.equals("on")) {
+                searchQueriesRequest.getQueriesDictionary().put(DocFields.SYNONYMS, mainQuery);
+                searchForm.setUseWordNet(true);
+            }else {
+                searchForm.setUseWordNet(false);
+            }
+        }
+        if(titleQuery != null && !"".equals(titleQuery)){
+            searchQueriesRequest.getQueriesDictionary().put(DocFields.TITLE, titleQuery);
+        }
+        if(authorsQuery != null && !"".equals(authorsQuery)){
+            searchQueriesRequest.getQueriesDictionary().put(DocFields.AUTHOR, authorsQuery);
+        }
+        if(keywordsQuery != null && !"".equals(keywordsQuery)){
+            searchQueriesRequest.getQueriesDictionary().put(DocFields.KEYWORDS, keywordsQuery);
+        }
+        logger.info(searchQueriesRequest.getQueriesDictionary().toString());
+
+        List<ResultObject> results = new ArrayList<>();
         try{
             Searcher searcher = new Searcher();
             results = searcher.search(searchQueriesRequest);
@@ -97,7 +161,7 @@ public class SearchController {
         }
         model.addAttribute("results", results);
 
-        return "search/results";
+        return "search/results_fragment :: resultsList";
     }
 
 
