@@ -52,7 +52,7 @@ public class Searcher {
 
     public Searcher() throws IOException {
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.TEST_INDEX_DIR).toPath()));
 
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
         analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
@@ -64,7 +64,7 @@ public class Searcher {
 
     public Searcher(int numRetrievedDocs) throws IOException {
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.TEST_INDEX_DIR).toPath()));
 
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
         analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
@@ -109,7 +109,7 @@ public class Searcher {
         Query q = MultiFieldQueryParser.parse(qsa.toArray(new String[qsa.size()]), fsa.toArray(new String[fsa.size()]), analyzer);
 
         IndexSearcher searcher = new IndexSearcher(reader);
-        TopDocs docs = searcher.search(q, 1000);
+        TopDocs docs = searcher.search(q, this.numRetrievedDocs);
         ScoreDoc[] hits = docs.scoreDocs;
 
         List<ResultObject> resultObjects = new ArrayList<>();
@@ -133,7 +133,7 @@ public class Searcher {
         if (useQueryExpansion) {
             reader.close();
 
-            this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
+            this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.TEST_INDEX_DIR).toPath()));
             searcher = new IndexSearcher(reader);
             MoreLikeThis mlt = new MoreLikeThis(reader);
             mlt.setMinTermFreq(0);
