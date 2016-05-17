@@ -13,6 +13,7 @@ public class SearchQueriesRequest {
 
     public SearchQueriesRequest(){
         queriesDictionary = new HashMap<>();
+        useQueryExpansion = false;
     }
 
     public Map<String, String> getQueriesDictionary() {

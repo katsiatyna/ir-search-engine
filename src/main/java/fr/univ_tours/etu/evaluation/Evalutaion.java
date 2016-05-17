@@ -33,7 +33,7 @@ public class Evalutaion {
 
     public static void main(String[] args) {
         System.out.println("unranked : "+unranked_evaluation());
-        System.out.println("ranked : "+ranked_evaluation(5));
+        System.out.println("ranked : "+ranked_evaluation(10));
     }
     
     public static double unranked_evaluation() {
@@ -53,7 +53,9 @@ public class Evalutaion {
                 EvalUnrankedResult result = new EvalUnrankedResult();
                 for (ResultObject resultObject : resultObjects) {
                     result.add(resultObject.getFileName().split("\\.")[0]);
+                    System.out.print(resultObject.getFileName().split("\\.")[0] + ",");
                 }
+                System.out.println();
                 finalP += (double)intersection(evalUnrankedQuery.getResults(), result.getResutls()).size() / (double)result.getResutls().size();
                 finalR += (double)intersection(evalUnrankedQuery.getResults(), result.getResutls()).size() / (double)evalUnrankedQuery.getResults().size();
                 counter++;

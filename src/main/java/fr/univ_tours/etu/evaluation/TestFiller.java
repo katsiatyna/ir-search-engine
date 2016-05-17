@@ -23,9 +23,14 @@ public class TestFiller {
         e1.add("006");e1.add("019");e1.add("024");e1.add("025");e1.add("027");e1.add("037");
         q1.setResults(e1);
         testSet.add(q1);
-        
-        
-        
+
+        EvalUnrankedQuery q2 = new EvalUnrankedQuery("programming language",  new TreeSet<>());
+        Set<String> e2 = new TreeSet<>();
+        e2.add("024");e2.add("025");e2.add("037");e2.add("005");e2.add("040");e2.add("061");e2.add("049");e2.add("057");e2.add("029");e2.add("001");
+        q2.setResults(e2);
+        testSet.add(q2);
+
+
         return testSet;
     }
 //    language

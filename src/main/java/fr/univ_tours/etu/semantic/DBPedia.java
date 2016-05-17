@@ -115,6 +115,9 @@ public class DBPedia {
 		{
 			System.out.println("PID is: " + i);
 			System.out.println(res.get(i).getLabel());
+			System.out.println(res.get(i).getLink());
+			System.out.println(res.get(i).getResource());
+			System.out.println(res.get(i).getSummary());
 		}
 		
 	}
