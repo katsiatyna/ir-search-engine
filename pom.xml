@@ -1,8 +1,8 @@
 <project
-        xmlns="http://maven.apache.org/POM/4.0.0"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
-        >
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"
+>
     <modelVersion>4.0.0</modelVersion>
     <groupId>fr.univ_tours.etu</groupId>
     <artifactId>ir-search-engine</artifactId>
@@ -69,10 +69,10 @@
             <artifactId>spring-orm</artifactId>
         </dependency>
         <dependency>
-	<groupId>org.apache.tika</groupId>
-	<artifactId>tika-parsers</artifactId>
-	<version>1.12</version>
-</dependency>
+            <groupId>org.apache.tika</groupId>
+            <artifactId>tika-parsers</artifactId>
+            <version>1.12</version>
+        </dependency>
         <!-- http://mvnrepository.com/artifact/org.apache.tika/tika-core -->
         <dependency>
             <groupId>org.apache.tika</groupId>
@@ -81,21 +81,15 @@
         </dependency>
 
         <!--  Lucene Standard Analyzer: test -->
-<dependency>
-	<groupId>org.apache.lucene</groupId>
-	<artifactId>lucene-analyzers-common</artifactId>
-	<version>5.5.0</version>
-</dependency>
 
-        
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <!-- Avoid issue #72 Could not initialize class org.thymeleaf.templateresolver.ServletContextTemplateResolver due to 'validation is not supported' -->
             <exclusions>
                 <exclusion>
-            		<artifactId>pull-parser</artifactId>
-            		<groupId>pull-parser</groupId>
+                    <artifactId>pull-parser</artifactId>
+                    <groupId>pull-parser</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -245,7 +239,8 @@
         <!-- http://mvnrepository.com/artifact/org.apache.jena/jena-core -->
         <dependency>
             <groupId>org.apache.jena</groupId>
-            <artifactId>jena-core</artifactId>
+            <artifactId>apache-jena-libs</artifactId>
+            <type>pom</type>
             <version>3.1.0</version>
         </dependency>
     </dependencies>
