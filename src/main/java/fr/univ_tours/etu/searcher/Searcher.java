@@ -47,12 +47,15 @@ public class Searcher {
     static {
         props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
+        props.put("pos.model", "edu/stanford/nlp/models/pos-tagger/english-caseless-left3words-distsim.tagger");
+        props.put("parse.model", "edu/stanford/nlp/models/lexparser/englishPCFG.caseless.ser.gz");
+        props.put("ner.model", "edu/stanford/nlp/models/ner/english.muc.7class.caseless.distsim.crf.ser.gz");
         queryTokenizer = new CoreNlpTokenizer(props);
     }
 
     public Searcher() throws IOException {
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.TEST_INDEX_DIR).toPath()));
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
 
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
         analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
@@ -64,7 +67,7 @@ public class Searcher {
 
     public Searcher(int numRetrievedDocs) throws IOException {
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.TEST_INDEX_DIR).toPath()));
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
 
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
         analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
@@ -133,7 +136,7 @@ public class Searcher {
         if (useQueryExpansion) {
             reader.close();
 
-            this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.TEST_INDEX_DIR).toPath()));
+            this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
             searcher = new IndexSearcher(reader);
             MoreLikeThis mlt = new MoreLikeThis(reader);
             mlt.setMinTermFreq(0);

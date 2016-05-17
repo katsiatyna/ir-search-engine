@@ -9,7 +9,7 @@ import org.apache.tika.config.TikaConfig;
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
 import org.apache.tika.parser.ner.NamedEntityParser;
-import org.apache.tika.parser.ner.corenlp.CoreNLPNERecogniser;
+
 import org.xml.sax.SAXException;
 
 import java.io.*;
@@ -64,7 +64,7 @@ public class TikaNETest {
     }
     public void test(String text) throws TikaException, IOException, SAXException {
         System.setProperty(NamedEntityParser.SYS_PROP_NER_IMPL,
-                CoreNLPNERecogniser.class.getName());
+                CoreNLPNERTika.class.getName());
 
 
         //test config is added to resources directory

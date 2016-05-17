@@ -29,13 +29,16 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.BytesRef;
 import org.apache.lucene.util.QueryBuilder;
-import org.apache.pdfbox.cos.COSDocument;
-import org.apache.pdfbox.pdfparser.PDFParser;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.util.PDFTextStripper;
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.pdf.PDFParser;
+import org.apache.tika.sax.BodyContentHandler;
+import org.xml.sax.SAXException;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -45,35 +48,38 @@ import java.util.*;
  * Created by Katherine on 10.03.2016.
  */
 public class ParserTest {
+    static String filePath = "c:\\Users\\Katherine\\Documents\\2nd sem\\IR\\project\\ir-search-engine\\src\\main\\resources\\test_docs\\J07-4010.pdf";
 
     public static void main(String[] args) throws ParseException {
-        PDFParser parser;
+        /*PDFParser parser;
         PDFTextStripper pdfStripper;
         PDDocument pdDoc;
         COSDocument cosDoc;
-
+*/
         String text;
-        String filePath = "c:\\Users\\Katherine\\Documents\\2nd sem\\IR\\project\\IR CORPUS DOCS\\1201.0409.pdf";
+
         File file;
 
-        pdfStripper = null;
+  /*      pdfStripper = null;
         pdDoc = null;
         cosDoc = null;
-
+  */    String parsed =   parseWithTika();
         file = new File(filePath);
         try {
-            parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
+    /*        parser = new PDFParser(new FileInputStream(file)); // update for PDFBox V 2.0
             parser.parse();
             cosDoc = parser.getDocument();
             pdfStripper = new PDFTextStripper();
             pdDoc = new PDDocument(cosDoc);
             pdDoc.getNumberOfPages();
-            //pdfStripper.setStartPage(1);
+    */        //pdfStripper.setStartPage(1);
             //pdfStripper.setEndPage(10);
-            text = pdfStripper.getText(pdDoc);
+      /*      text = pdfStripper.getText(pdDoc);
             String resultString = text.replaceAll("\\p{C}|\\p{Sm}|\\p{Sk}|\\p{So}", " ");
+            */
 
             //testDictionary();
+            testOpenNlp(parsed);
             testOpenNlp("anas al bassit");
             testOpenNlp("Anas Al Bassit");
             testOpenNlp("barack obama");
@@ -94,9 +100,9 @@ public class ParserTest {
 
         Properties props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
-        props.put("pos.model", "edu/stanford/nlp/models/pos-tagger/english-caseless-left3words-distsim.tagger");
-        props.put("parse.model", "edu/stanford/nlp/models/lexparser/englishPCFG.caseless.ser.gz");
-        props.put("ner.model", "edu/stanford/nlp/models/ner/english.muc.7class.caseless.distsim.crf.ser.gz");
+        //props.put("pos.model", "edu/stanford/nlp/models/pos-tagger/english-caseless-left3words-distsim.tagger");
+        //props.put("parse.model", "edu/stanford/nlp/models/lexparser/englishPCFG.caseless.ser.gz");
+        //props.put("ner.model", "edu/stanford/nlp/models/ner/english.muc.7class.caseless.distsim.crf.ser.gz");
         //props.put("ner.model", "edu/stanford/nlp/models/ner/english.all.3class.caseless.distsim.crf.ser.gz edu/stanford/nlp/models/ner/english.muc.7class.caseless.distsim.crf.ser.gz edu/stanford/nlp/models/ner/english.conll.4class.caseless.distsim.crf.ser.gz");
         NlpNeTokenizer nlpNeTokenizer = new CoreNlpTokenizer(props);
         nlpNeTokenizer.tokenize(text);
@@ -157,6 +163,42 @@ public class ParserTest {
 
 
 */
+    }
+
+    public static String parseWithTika(){
+        BodyContentHandler handler = new BodyContentHandler();
+        Metadata metadata = new Metadata();
+        FileInputStream inputstream = null;
+        try {
+            inputstream = new FileInputStream(new File(filePath));
+
+        ParseContext pcontext = new ParseContext();
+
+        //parsing the document using PDF parser
+        PDFParser pdfparser = new PDFParser();
+        pdfparser.parse(inputstream,  handler, metadata, pcontext);
+
+        //getting the content of the document
+        System.out.println("Contents of the PDF :" + handler.toString());
+
+        //getting metadata of the document
+        System.out.println("Metadata of the PDF:");
+        String[] metadataNames = metadata.names();
+
+        for(String name : metadataNames) {
+            System.out.println(name+ " : " + metadata.get(name));
+        }
+            return handler.toString();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (TikaException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 
