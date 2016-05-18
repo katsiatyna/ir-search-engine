@@ -112,7 +112,7 @@ public class NlpSynoner implements Synoner {
     public NlpSynoner(Map<String, List<String>> lemmaPosStringMap, List<String> lemmas) throws MalformedURLException {
         fillPosMap(lemmaPosStringMap);
         this.synContent="";
-        String wnhome="C:\\Users\\anas\\Documents\\NetBeansProjects\\IR\\WordNet_3.1";
+        String wnhome="c:\\Users\\Katherine\\Documents\\2nd sem\\IR\\project\\WordNet_3.1";
         String path = wnhome + File.separator + "dict";
         this.lemmas = lemmas;
         URL url = new URL("file", null, path);

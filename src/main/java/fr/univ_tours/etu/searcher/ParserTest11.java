@@ -94,7 +94,7 @@ public class ParserTest11 {
         Properties props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
         NlpNeTokenizer nlpNeTokenizer = new CoreNlpTokenizer(props);
-        nlpNeTokenizer.tokenize(text);
+        nlpNeTokenizer.tokenize(text, false);
         List<String> neList = nlpNeTokenizer.getNeList();
         String neString = nlpNeTokenizer.getNeString(";", false);
         List<String> lemmaList = nlpNeTokenizer.getLemmaList();
@@ -136,7 +136,7 @@ public class ParserTest11 {
 
         String queryString = "Jing Jiang USA abstract";
         NlpNeTokenizer queryTokenizer = new CoreNlpTokenizer(props);
-        queryTokenizer.tokenize(queryString);
+        queryTokenizer.tokenize(queryString, true);
         String neQuery = queryTokenizer.getNeString(";", true);
         //QueryBuilder builder = new QueryBuilder(new SemicolonAnalyzer());
         //Query query = builder.createPhraseQuery("namedEntities",neQuery);
@@ -152,7 +152,7 @@ public class ParserTest11 {
 
         Reader r = new StringReader("doduck prototype idea");
         
-        //for(String ne: queryTokenizer.getNeList()) {
+        //for(String ne: caselessTokenizer.getNeList()) {
         //Query query = new TermQuery(new Term("namedEntities", ne));
         IndexSearcher searcher = new IndexSearcher(reader);
         TopDocs docs = searcher.search(q, 2);

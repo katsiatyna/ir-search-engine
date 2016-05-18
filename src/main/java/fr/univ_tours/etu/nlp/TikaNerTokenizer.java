@@ -41,7 +41,7 @@ public class TikaNerTokenizer implements NlpNeTokenizer {
         }
     }
     @Override
-    public void tokenize(String text) {
+    public void tokenize(String text, boolean isQuery) {
         Metadata md = new Metadata();
         //tika.parse(new ByteArrayInputStream(text.getBytes()), md);
         Map<String, List<String>> recognized = recognizer.recogniseAll(text);

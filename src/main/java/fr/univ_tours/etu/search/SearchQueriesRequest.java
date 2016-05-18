@@ -10,6 +10,7 @@ public class SearchQueriesRequest {
 
     protected Map<String, String> queriesDictionary;
     protected boolean useQueryExpansion;
+    private String operator;
 
     public SearchQueriesRequest(){
         queriesDictionary = new HashMap<>();
@@ -30,5 +31,13 @@ public class SearchQueriesRequest {
 
     public void setUseQueryExpansion(boolean useQueryExpansion) {
         this.useQueryExpansion = useQueryExpansion;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
+    }
+
+    public String getOperator() {
+        return operator;
     }
 }

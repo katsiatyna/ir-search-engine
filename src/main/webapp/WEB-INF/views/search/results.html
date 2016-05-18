@@ -32,7 +32,7 @@
                     <input type="text" class="  search-query form-control" placeholder="Seek"
                            th:field="*{mainQuery}" id="mainQuery"/>
                             <span class="input-group-btn">
-                                <button class="btn btn-danger" type="button" onclick="searchPublications()">
+                                <button class="btn btn-danger" type="button" onclick="search()">
                                     <span class=" glyphicon glyphicon-search"></span>
                                 </button>
                             </span>
@@ -66,6 +66,31 @@
                        th:field="*{keywordsQuery}"/>
             </div>
         </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <label class="col-md-2 advanced-search" >Publishing Year (DBLP)</label>
+            <div class="btn-group advanced-search col-md-2 " data-toggle="buttons">
+                <p th:value="${searchForm.operator}"></p>
+                <label class="btn btn-success btn-sm">
+                    <input type="radio" name="operator" id="eq" autocomplete="off" th:checked="${searchForm.operator == 'eq'}"/> =
+                </label>
+                <label class="btn btn-success btn-sm">
+                    <input type="radio" name="operator" id="lt" autocomplete="off" th:checked="${searchForm.operator == 'lt'}"/> &lt;
+                </label>
+                <label class="btn btn-success btn-sm">
+                    <input type="radio" name="operator" id="le" autocomplete="off" th:checked="${searchForm.operator == 'le'}"/> &le;
+                </label>
+                <label class="btn btn-success btn-sm">
+                    <input type="radio" name="operator" id="gt" autocomplete="off" th:checked="${searchForm.operator == 'gt'}"/> &gt;
+                </label>
+                <label class="btn btn-success btn-sm">
+                    <input type="radio" name="operator" id="ge" autocomplete="off" th:checked="${searchForm.operator == 'ge'}"/> &ge;
+                </label>
+            </div>
+            <div id="date-input" align="center" class="col-md-2  advanced-search">
+                <input type="text" id="year" class="form-control" placeholder="Year" th:field="*{year}"/>
+            </div>
+        </div>
 
     </form>
     <hr size="4" color="black"/>
@@ -91,11 +116,35 @@
                     </div>-->
                 </div>
             </div>
-            <div class="tab-pane" id="dblp">
-                DBLP
-            </div>
             <div class="tab-pane" id="dbpedia">
-                DBPdia
+                <i id="loader-dbpedia" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                <span class="sr-only">Loading...</span>
+
+                <div id="result-list-dbpedia">
+                    <!--<div th:text="'Number of documents: ' + ${numDocs}"></div>
+                    <div class="row well col-md-10" th:each="result : ${results}">
+                        <div ><a th:text="${ (result.rank + 1) + '. ' + result.title}"
+                                 th:href="'/files/' + ${result.fileName}"
+                                  ></a></div>
+                        <div> <a href="#" th:text="${result.authors}"></a></div>
+                        <div th:text="${#strings.substring(result.summary,0,500)} + '...'"></div>
+                    </div>-->
+                </div>
+            </div>
+            <div class="tab-pane" id="dblp">
+                <i id="loader-dblp" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                <span class="sr-only">Loading...</span>
+
+                <div id="result-list-dblp">
+                    <!--<div th:text="'Number of documents: ' + ${numDocs}"></div>
+                    <div class="row well col-md-10" th:each="result : ${results}">
+                        <div ><a th:text="${ (result.rank + 1) + '. ' + result.title}"
+                                 th:href="'/files/' + ${result.fileName}"
+                                  ></a></div>
+                        <div> <a href="#" th:text="${result.authors}"></a></div>
+                        <div th:text="${#strings.substring(result.summary,0,500)} + '...'"></div>
+                    </div>-->
+                </div>
             </div>
         </div>
     </div>

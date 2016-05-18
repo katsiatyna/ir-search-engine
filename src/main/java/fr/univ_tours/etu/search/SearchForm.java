@@ -11,6 +11,8 @@ public class SearchForm {
     protected String keywordsQuery;
     protected boolean useQueryExpansion = true;
     protected boolean useWordNet = true;
+    protected Integer year;
+    protected String operator;
 
     public String getMainQuery() {
         return mainQuery;
@@ -58,5 +60,21 @@ public class SearchForm {
 
     public void setUseWordNet(boolean useWordNet) {
         this.useWordNet = useWordNet;
+    }
+
+    public Integer getYear() {
+        return year;
+    }
+
+    public void setYear(Integer year) {
+        this.year = year;
+    }
+
+    public String getOperator() {
+        return operator;
+    }
+
+    public void setOperator(String operator) {
+        this.operator = operator;
     }
 }

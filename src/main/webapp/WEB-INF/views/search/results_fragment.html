@@ -21,6 +21,26 @@
         <div th:text="${#strings.substring(result.summary,0,500)} + '...'"></div>
     </div>
 </div>
+<div id="result-list-fragment-dbpedia" th:fragment="resultsListDBPedia" th:unless="${#lists.isEmpty(resultsDBPedia)}">
+    <div th:text="'Number of documents: ' + ${numDocs}"></div>
+    <div class="row well col-md-10" th:each="result : ${resultsDBPedia}">
+        <div ><p th:text="${result.key + ': ' + result.value.label}"></p></div>
+        <div>Link: <a  th:href="${result.value.link}" th:text="${result.value.link}"></a></div>
+        <div>Resource: <a th:href="${result.value.resource}" th:text="${result.value.resource}"></a></div>
+        <div th:text="${result.value.summary}"></div>
+    </div>
+</div>
+
+<div id="result-list-fragment-dblp" th:fragment="resultsListDBLP" th:unless="${#lists.isEmpty(resultsDBLP)}">
+    <div th:text="'Number of documents: ' + ${numDocs}"></div>
+    <div class="row well col-md-10" th:each="result : ${resultsDBLP}">
+        <div ><p th:text="${result.key + ': ' + result.value.publicationTitle + ' (' + result.value.year + ')'}"></p></div>
+        <div>Link: <a  th:href="${result.value.publicationLink}" th:text="${result.value.publicationLink}"></a></div>
+        <div>Author: <a th:href="${result.value.authorLink}" th:text="${result.value.authorName}"></a></div>
+    </div>
+</div>
+
+
 <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
 <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
 <script src="../../../resources/js/bootstrap-switch.min.js"

@@ -48,7 +48,7 @@
                         />
                     </span>
                     <span>
-                        <label for="wn-checkbox"><b>   WordNet</b></label>
+                        <label for="wn-checkbox"><b> WordNet</b></label>
                         <input type="checkbox" id="wn-checkbox" name="useWordNet" checked="checked" data-size="mini"
                         />
                     </span>
@@ -72,15 +72,54 @@
                     <input type="text" class="form-control" placeholder="Keywords" th:field="*{keywordsQuery}"/>
                 </div>
             </div>
-
+            <!--<div class="row">
+                <div class="dropdown" align="left">
+                    <label class="col-md-2 col-md-offset-2 advanced-search" >Publishing Year</label>
+                    <div class="btn-group col-md-1  advanced-search">
+                        <button type="button" style="width:50px" class="btn btn-primary dropdown-toggle btn-sm" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                >
+                            = <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">&lt;</a></li>
+                            <li><a href="#">&gt; </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>-->
+            <div class="row" align="left">
+                <label class="col-md-2 col-md-offset-2 advanced-search" >Publishing Year (DBLP)</label>
+                <div class="btn-group advanced-search col-md-2 " data-toggle="buttons">
+                    <label class="btn btn-success btn-sm active">
+                        <input type="radio" name="operator" id="eq" value="eq" autocomplete="off" checked="checked"/> =
+                    </label>
+                    <label class="btn btn-success btn-sm">
+                        <input type="radio" name="operator" id="lt" value="lt" autocomplete="off" /> &lt;
+                    </label>
+                    <label class="btn btn-success btn-sm">
+                        <input type="radio" name="operator" id="le" value="le" autocomplete="off"/> &le;
+                    </label>
+                    <label class="btn btn-success btn-sm">
+                        <input type="radio" name="operator" id="gt" value="gt" autocomplete="off"/> &gt;
+                    </label>
+                    <label class="btn btn-success btn-sm">
+                        <input type="radio" name="operator" id="ge" value="ge" autocomplete="off"/> &ge;
+                    </label>
+                </div>
+                <div id="date-input" align="center" class="col-md-2  advanced-search">
+                    <input type="text" class="form-control" placeholder="Year" th:field="*{year}"/>
+                </div>
+            </div>
 
         </form>
+
     </div>
 </div>
 <!--<script src="http://code.jquery.com/jquery-latest.js"></script>-->
 <script src="../../../resources/js/jquery.min.js" th:src="@{/resources/js/jquery.min.js}"></script>
 <script src="../../../resources/js/bootstrap.min.js" th:src="@{/resources/js/bootstrap.min.js}"></script>
 <script src="../../../resources/js/bootstrap-switch.min.js" th:src="@{/resources/js/bootstrap-switch.min.js}"></script>
+<script src="../../../resources/js/main.js" th:src="@{/resources/js/main.js}"></script>
 
 <script>
 $("[name='useQueryExp']").bootstrapSwitch();
@@ -88,6 +127,7 @@ $("[name='useWordNet']").bootstrapSwitch();
 $("[name='useQueryExp']").change(function(){
     $("[name='my-hidden']").val($(this).val());
 });
+
 
 </script>
 </body>

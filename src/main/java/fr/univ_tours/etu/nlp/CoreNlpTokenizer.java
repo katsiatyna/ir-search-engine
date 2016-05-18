@@ -25,7 +25,7 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
     }
 
     @Override
-    public void tokenize(String text) {
+    public void tokenize(String text, boolean isQuery) {
         document = new Annotation(text);
         // run all Annotators on this text
         pipeline.annotate(document);
@@ -49,7 +49,9 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
                 //System.out.println("Word: " + word);
                 String lemma = token.get(CoreAnnotations.LemmaAnnotation.class);
                 //System.out.println("Lemma: " + lemma);
-                lemmaList.add(lemma);
+                lemmaList.add((isQuery &&
+                        (lemma.equals("not") || lemma.equals("and") || lemma.equals("or"))) ?
+                        lemma.toUpperCase() : lemma);
                 String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
                 if(lemmaPosMap.get(lemma) == null){
                     lemmaPosMap.put(lemma, new ArrayList<>());
@@ -64,6 +66,8 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
 //                System.out.println();
                 currNeToken = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
                 // Strip out "O"s completely, makes code below easier to understand
+
+
                 if (currNeToken.equals("O")) {
                     // LOG.debug("Skipping '{}' classified as {}", word, currNeToken);
                     if (!prevNeToken.equals("O") && (sb.length() > 0)) {
@@ -148,7 +152,7 @@ public class CoreNlpTokenizer implements NlpNeTokenizer {
             sb.append(delimiter);
         }
         String neString = sb.toString();
-        return (neString.length() > 1) ? neString.substring(0, neString.length() - 1) : null;
+        return (neString.length() > 1) ? neString.substring(0, neString.length() - 1) : "";
     }
 
     @Override

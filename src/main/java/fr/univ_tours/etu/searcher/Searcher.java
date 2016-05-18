@@ -38,19 +38,25 @@ import org.apache.lucene.store.FSDirectory;
  */
 public class Searcher {
 
-    private static final Properties props;
+    private static final Properties propsCaseless;
+    private static final Properties propsRegular;
     private IndexReader reader;
     private final PerFieldAnalyzerWrapper analyzer;
     private final int numRetrievedDocs;
-    static NlpNeTokenizer queryTokenizer;
+    static NlpNeTokenizer caselessTokenizer;
+    static NlpNeTokenizer regularTokenizer;
 
     static {
-        props = new Properties();
-        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
-        props.put("pos.model", "edu/stanford/nlp/models/pos-tagger/english-caseless-left3words-distsim.tagger");
-        props.put("parse.model", "edu/stanford/nlp/models/lexparser/englishPCFG.caseless.ser.gz");
-        props.put("ner.model", "edu/stanford/nlp/models/ner/english.muc.7class.caseless.distsim.crf.ser.gz");
-        queryTokenizer = new CoreNlpTokenizer(props);
+        propsRegular = new Properties();
+        propsRegular.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
+        regularTokenizer = new CoreNlpTokenizer(propsRegular);
+        propsCaseless = new Properties();
+        propsCaseless.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
+        propsCaseless.put("pos.model", "edu/stanford/nlp/models/pos-tagger/english-caseless-left3words-distsim.tagger");
+        propsCaseless.put("parse.model", "edu/stanford/nlp/models/lexparser/englishPCFG.caseless.ser.gz");
+        propsCaseless.put("ner.model", "edu/stanford/nlp/models/ner/english.muc.7class.caseless.distsim.crf.ser.gz");
+        caselessTokenizer = new CoreNlpTokenizer(propsCaseless);
+
     }
 
     public Searcher() throws IOException {
@@ -87,14 +93,22 @@ public class Searcher {
         List<String> qsa = new ArrayList<>();
         String contentLemmas = "";
         if (queriesDictionary.containsKey(DocFields.CONTENTS)) {
-            queryTokenizer.tokenize(queriesDictionary.get(DocFields.CONTENTS));
-            contentLemmas = queryTokenizer.getLemmaString();
-            System.out.println("Lemmas: " + contentLemmas);
-            if (queryTokenizer.getNeList() != null && queryTokenizer.getNeList().size() != 0) {
+            regularTokenizer.tokenize(queriesDictionary.get(DocFields.CONTENTS), true);
+            caselessTokenizer.tokenize(queriesDictionary.get(DocFields.CONTENTS), true);
+            contentLemmas = caselessTokenizer.getLemmaString();
+            System.out.println("Lemmas: " + caselessTokenizer.getLemmaList());
+            String neString = "";
+            if (caselessTokenizer.getNeList() != null && caselessTokenizer.getNeList().size() != 0) {
+                neString = caselessTokenizer.getNeString(";", true);
+                System.out.println("NE caseless: " + neString);
+            }
+            if (regularTokenizer.getNeList() != null && regularTokenizer.getNeList().size() != 0) {
+                neString += regularTokenizer.getNeString(";", true);
+                System.out.println("NE all: " + neString);
+            }
+            if(!"".equals(neString)){
                 fsa.add(DocFields.NAMED_ENTITIES);
-                String  neString = queryTokenizer.getNeString(";", true);
                 qsa.add(neString);
-                System.out.println("NE: " + neString);
             }
 
         }

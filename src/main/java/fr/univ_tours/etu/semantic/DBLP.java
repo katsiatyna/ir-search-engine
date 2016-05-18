@@ -73,6 +73,7 @@ public class DBLP {
 		
 		
 		this.query=header + this.getAuthorQuery()+this.conditions+ this.getYearQuery()+footer ;
+		System.out.println(query);
 		
 	}
 	

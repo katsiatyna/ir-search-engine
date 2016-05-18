@@ -28,8 +28,8 @@ body{
 }
 
 .row {
-  margin-top: 20px;
-  margin-bottom: 20px
+  margin-top: 15px;
+  margin-bottom: 15px
 }
 
 #searchForm .row{
@@ -37,7 +37,7 @@ body{
 }
 
 #div-logo {
-    margin-top: 50px;
+    margin-top: 20px;
     margin-bottom: 25px;
 }
 

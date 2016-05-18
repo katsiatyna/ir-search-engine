@@ -17,7 +17,7 @@ public class DocFields {
 	   public static final String SYNONYMS="synonyms";
 	   
 	   
-	   public static final String TEST_INDEX_DIR= "C:\\Users\\anas\\Documents\\NetBeansProjects\\IR\\Test\\index";
+	   public static final String TEST_INDEX_DIR= "src/main/resources/testindexdir";
 	   public static final String TEST_DATA_DIR="src/main/resources/test_docs";
            
 	   public static final String INDEX_DIR= "src/main/resources/indexdir";

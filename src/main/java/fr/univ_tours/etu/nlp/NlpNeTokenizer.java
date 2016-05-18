@@ -7,7 +7,7 @@ import java.util.Map;
  * Created by Katherine on 19.03.2016.
  */
 public interface NlpNeTokenizer {
-    public void tokenize(String text);
+    public void tokenize(String text, boolean isQuery);
 
     public List<String> getNeList();
 

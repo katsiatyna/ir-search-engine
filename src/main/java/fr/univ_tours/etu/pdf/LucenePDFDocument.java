@@ -531,11 +531,12 @@ public class LucenePDFDocument
      * @throws IOException
      */
     public TextField getNamedEntities(String text) throws IOException {
-        nlpNeTokenizer.tokenize(text);
+        nlpNeTokenizer.tokenize(text, false);
         String neString = nlpNeTokenizer.getNeString(";", false);
         System.out.println(neString);
         lemmaPosMap = nlpNeTokenizer.getLemmaPosMap();
         lemmas = nlpNeTokenizer.getLemmaList();
         return new TextField(DocFields.NAMED_ENTITIES, neString, Field.Store.NO);
+
     }
 }
