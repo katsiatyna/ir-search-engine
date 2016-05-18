@@ -1,9 +1,13 @@
 package fr.univ_tours.etu.semantic;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -125,12 +129,28 @@ public class DBLP {
 		
 		ResultSet rs=qe.execSelect();
 		int i=1;
+		
+		
+//		while(rs.hasNext())
+//		{
+//			QuerySolution sol=rs.nextSolution(); 
+//			int year= Integer.parseInt(sol.getLiteral("year").getValue().toString());
+//			System.out.println(year);
+//			
+//			System.out.println(sol.getLiteral("year").getDatatypeURI());
+//		}
+		
 		while (rs.hasNext())
 		{
 		QuerySolution sol=rs.nextSolution(); 
 		
-		RowLP row= new RowLP(sol.getLiteral("?year").getInt(),sol.getResource("?paper").toString(),
-				sol.getLiteral("?title").getString(),sol.getResource("?author").toString(),sol.getLiteral("?name").getString());
+		int year= Integer.parseInt(sol.getLiteral("year").getValue().toString());
+		//sol.getLiteral("year").getValue()
+		RowLP row= new RowLP(year,
+				sol.getResource("paper").toString(),
+				sol.getLiteral("title").getString(),
+				sol.getResource("author").toString(),
+				sol.getLiteral("name").getString());
 		
 		this.result.put(i, row);
 		i++;
@@ -142,14 +162,19 @@ public class DBLP {
 	
 	public static void main(String args[])
 	{
-		DBLP d= new DBLP("classification network","",1990,">=");
-		System.out.println(d.getQuery());
+		DBLP d= new DBLP("classification network","",0,">=");
+		//System.out.println(d.getQuery());
 		HashMap<Integer, RowLP> res=d.getResults();
 		
 		for(int i:res.keySet())
 		{
-			System.out.println("PID is: " + i);
+			System.out.println("Row ID is: " + i);
+			System.out.println(res.get(i).getYear());
 			System.out.println(res.get(i).getPublicationTitle());
+			System.out.println(res.get(i).getPublicationLink());
+			System.out.println(res.get(i).getAuthorName());
+			System.out.println(res.get(i).getAuthorLink());
+			System.out.println("-----------------------------------------");
 		}
 		
 	}

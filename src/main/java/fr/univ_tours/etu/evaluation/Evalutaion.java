@@ -32,8 +32,12 @@ public class Evalutaion {
     public static double B_factor = 1;
 
     public static void main(String[] args) {
-        System.out.println("unranked : "+unranked_evaluation());
-        System.out.println("ranked : "+ranked_evaluation(10));
+        System.out.println("******************");
+        System.out.println("Unranked Evaluation : "+unranked_evaluation()+"%");
+        System.out.println("******************");
+        System.out.println("******************");
+        System.out.println("Ranked Evaluation : "+ranked_evaluation(20)+"%");
+        System.out.println("******************");
     }
     
     public static double unranked_evaluation() {
