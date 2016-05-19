@@ -26,13 +26,13 @@ public class TestFiller {
 
         EvalUnrankedQuery q2 = new EvalUnrankedQuery("programming language",  new TreeSet<>());
         Set<String> e2 = new TreeSet<>();
-        e2.add("024");e2.add("025");e2.add("037");e2.add("061");e2.add("049");e2.add("057");e2.add("029");e2.add("001");
+        e2.add("024");e2.add("025");e2.add("037");e2.add("019");e2.add("027");e2.add("057");e2.add("006");e2.add("001");
         q2.setResults(e2);
         testSet.add(q2);
 
         EvalUnrankedQuery q3 = new EvalUnrankedQuery("J. Smith",  new TreeSet<>());
         Set<String> e3 = new TreeSet<>();
-        e3.add("021");e3.add("022");e3.add("023");
+        e3.add("021");e3.add("022");e3.add("023");e3.add("111");
         q3.setResults(e3);
         testSet.add(q3);
 
@@ -42,11 +42,11 @@ public class TestFiller {
         q4.setResults(e4);
         testSet.add(q4);
 
-//        EvalUnrankedQuery q5 = new EvalUnrankedQuery("volcano active",  new TreeSet<>());
-//        Set<String> e5 = new TreeSet<>();
-//        e5.add("184");e5.add("180");e5.add("185");e5.add("187");e5.add("186");e5.add("183");
-//        q5.setResults(e5);
-//        testSet.add(q5);
+        EvalUnrankedQuery q5 = new EvalUnrankedQuery("volcano NOT active",  new TreeSet<>());
+        Set<String> e5 = new TreeSet<>();
+        e5.add("184");e5.add("180");e5.add("185");
+        q5.setResults(e5);
+        testSet.add(q5);
 
         EvalUnrankedQuery q6 = new EvalUnrankedQuery("world bank affiliated agency",  new TreeSet<>());
         Set<String> e6 = new TreeSet<>();
@@ -93,13 +93,91 @@ public class TestFiller {
         q11.setResults(e11);
         testSet.add(q11);
 
-        EvalUnrankedQuery q12 = new EvalUnrankedQuery("technologies and tools for information processing",  new TreeSet<>());
-        Set<String> e12 = new TreeSet<>();
-        e12.add("006");        e12.add("004");        e12.add("052");        e12.add("005");        e12.add("050");
-        e12.add("001");
-        q12.setResults(e12);
-        testSet.add(q12);
-        
+        EvalUnrankedQuery q13 = new EvalUnrankedQuery("network protocol",  new TreeSet<>());
+        Set<String> e13 = new TreeSet<>();
+        e13.add("018");        e13.add("028");        e13.add("030");       e13.add("040");
+        q13.setResults(e13);
+        testSet.add(q13);
+
+        EvalUnrankedQuery q14 = new EvalUnrankedQuery("leaders of America",  new TreeSet<>());
+        Set<String> e14 = new TreeSet<>();
+        e14.add("100");        e14.add("075");        e14.add("085");
+        e14.add("099");        e14.add("147");        e14.add("155");
+        e14.add("069");        e14.add("012");        e14.add("103");
+        e14.add("156");        e14.add("142");        e14.add("022");
+        e14.add("126");        e14.add("150");        e14.add("089");
+        e14.add("096");        e14.add("079");        e14.add("114");
+        e14.add("154");        e14.add("164");
+        q14.setResults(e14);
+        testSet.add(q14);
+
+        EvalUnrankedQuery q15 = new EvalUnrankedQuery("states in America",  new TreeSet<>());
+        Set<String> e15 = new TreeSet<>();
+        e15.add("007");        e15.add("189");        e15.add("145");       e15.add("173");         e15.add("142");
+        e15.add("071");        e15.add("156");        e15.add("103");       e15.add("158");         e15.add("160");
+        e15.add("177");        e15.add("140");        e15.add("012");       e15.add("137");         e15.add("167");
+        e15.add("136");        e15.add("174");        e15.add("171");       e15.add("139");         e15.add("175");
+        e15.add("178");        e15.add("199");        e15.add("170");       e15.add("162");         e15.add("176");
+        q15.setResults(e15);
+        testSet.add(q15);
+
+        EvalUnrankedQuery q16 = new EvalUnrankedQuery("Williams NOT Theodore",  new TreeSet<>());
+        Set<String> e16 = new TreeSet<>();
+        e16.add("074");        e16.add("070");        e16.add("073");       e16.add("127");         e16.add("072");
+        e16.add("071");        e16.add("035");        e16.add("161");       e16.add("111");         e16.add("034");
+        e16.add("069");        e16.add("062");
+        q16.setResults(e16);
+        testSet.add(q16);
+
+        EvalUnrankedQuery q17 = new EvalUnrankedQuery("Universities in Washington",  new TreeSet<>());
+        Set<String> e17 = new TreeSet<>();
+        e17.add("188");        e17.add("078");        e17.add("136");       e17.add("132");         e17.add("134");
+        e17.add("007");        e17.add("009");
+        q17.setResults(e17);
+        testSet.add(q17);
+
+        EvalUnrankedQuery q18 = new EvalUnrankedQuery("index of religious honorifics titles",  new TreeSet<>());
+        Set<String> e18 = new TreeSet<>();
+        e18.add("022");        e18.add("071");        e18.add("142");
+        q18.setResults(e18);
+        testSet.add(q18);
+
+        EvalUnrankedQuery q19 = new EvalUnrankedQuery("technologies tools for information processing",  new TreeSet<>());
+        Set<String> e19 = new TreeSet<>();
+        e19.add("032");        e19.add("014");        e19.add("033");
+        q19.setResults(e19);
+        testSet.add(q19);
+
+        EvalUnrankedQuery q20 = new EvalUnrankedQuery("american university",  new TreeSet<>());
+        Set<String> e20 = new TreeSet<>();
+        e20.add("004");        e20.add("006");        e20.add("149");       e20.add("005");         e20.add("016");
+        e20.add("052");        e20.add("035");        e20.add("161");       e20.add("111");         e20.add("034");
+        e20.add("069");        e20.add("050");        e20.add("062");
+        q20.setResults(e20);
+        testSet.add(q20);
+
+        EvalUnrankedQuery q21 = new EvalUnrankedQuery("presidents who were killed",  new TreeSet<>());
+        Set<String> e21 = new TreeSet<>();
+        e21.add("100");        e21.add("099");        e21.add("147");
+        e21.add("155");        e21.add("075");        e21.add("126");
+        e21.add("085");        e21.add("096");
+        q21.setResults(e21);
+        testSet.add(q21);
+
+        EvalUnrankedQuery q22 = new EvalUnrankedQuery("international war",  new TreeSet<>());
+        Set<String> e22 = new TreeSet<>();
+        e22.add("097");        e22.add("035");        e22.add("034");           e22.add("085");        e22.add("032");
+        e22.add("161");        e22.add("111");        e22.add("014");           e22.add("036");
+        q22.setResults(e22);
+        testSet.add(q22);
+
+        EvalUnrankedQuery q23 = new EvalUnrankedQuery("natural science researcher",  new TreeSet<>());
+        Set<String> e23 = new TreeSet<>();
+        e23.add("006");        e23.add("090");        e23.add("061");           e23.add("151");
+        e23.add("004");        e23.add("113");        e23.add("029");           e23.add("005");
+        q23.setResults(e23);
+        testSet.add(q23);
+
         return testSet;
     }
     

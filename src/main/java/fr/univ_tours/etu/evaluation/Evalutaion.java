@@ -43,13 +43,14 @@ public class Evalutaion {
     public static double unranked_evaluation() {
 
         try {
-            Searcher searcher = new Searcher(200);
+            Searcher searcher = new Searcher(200,DocFields.TEST_INDEX_DIR);
             List<EvalUnrankedQuery> testSet = TestFiller.fillUnranked();
             double finalP = 0;
             double finalR = 0;
             int counter = 0;
             for (EvalUnrankedQuery evalUnrankedQuery : testSet) {
                 SearchQueriesRequest queriesRequest = new SearchQueriesRequest();
+                queriesRequest.setUseQueryExpansion(true);
                 Map<String, String> map = new HashMap<>();
                 map.put(DocFields.CONTENTS, evalUnrankedQuery.getQuery());
                 queriesRequest.setQueriesDictionary(map);
@@ -60,7 +61,10 @@ public class Evalutaion {
                     System.out.print(resultObject.getFileName().split("\\.")[0] + ",");
                 }
                 System.out.println();
-                finalP += (double)intersection(evalUnrankedQuery.getResults(), result.getResutls()).size() / (double)result.getResutls().size();
+                if(result.getResutls().size()==0)
+                    finalP +=0;
+                else
+                    finalP += (double)intersection(evalUnrankedQuery.getResults(), result.getResutls()).size() / (double)result.getResutls().size();
                 finalR += (double)intersection(evalUnrankedQuery.getResults(), result.getResutls()).size() / (double)evalUnrankedQuery.getResults().size();
                 counter++;
             }
@@ -95,7 +99,10 @@ public class Evalutaion {
                 for (ResultObject resultObject : resultObjects) {
                     result.add(resultObject.getFileName().split("\\.")[0]);
                 }
-                finalP += (double)intersection(evalUnrankedQuery.getResults(), result.getResutls()).size() / (double)result.getResutls().size();
+                if(result.getResutls().size()==0)
+                    finalP +=0;
+                else
+                    finalP += (double)intersection(evalUnrankedQuery.getResults(), result.getResutls()).size() / (double)result.getResutls().size();
                 finalR += (double)intersection(evalUnrankedQuery.getResults(), result.getResutls()).size() / (double)evalUnrankedQuery.getResults().size();
                 counter++;
             }

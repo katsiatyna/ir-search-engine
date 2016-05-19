@@ -45,7 +45,7 @@ public class Searcher {
     private final int numRetrievedDocs;
     static NlpNeTokenizer caselessTokenizer;
     static NlpNeTokenizer regularTokenizer;
-
+    private String indexDir;
     static {
         propsRegular = new Properties();
         propsRegular.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner");
@@ -60,9 +60,8 @@ public class Searcher {
     }
 
     public Searcher() throws IOException {
-
-        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
-
+        this.indexDir = DocFields.INDEX_DIR;
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(this.indexDir).toPath()));
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
         analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
         this.analyzer = new PerFieldAnalyzerWrapper(
@@ -73,8 +72,19 @@ public class Searcher {
 
     public Searcher(int numRetrievedDocs) throws IOException {
 
-        this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
+        this.indexDir = DocFields.INDEX_DIR;
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(this.indexDir).toPath()));
+        Map<String, Analyzer> analyzerPerField = new HashMap<>();
+        analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
+        this.analyzer = new PerFieldAnalyzerWrapper(
+                new StandardAnalyzer(), analyzerPerField);
+        this.numRetrievedDocs = numRetrievedDocs;
 
+    }
+
+    public Searcher(int numRetrievedDocs, String indexDir) throws IOException {
+        this.indexDir = indexDir;
+        this.reader = DirectoryReader.open(FSDirectory.open(new File(this.indexDir).toPath()));
         Map<String, Analyzer> analyzerPerField = new HashMap<>();
         analyzerPerField.put(DocFields.NAMED_ENTITIES, new SemicolonAnalyzer());
         this.analyzer = new PerFieldAnalyzerWrapper(
@@ -103,7 +113,7 @@ public class Searcher {
                 System.out.println("NE caseless: " + neString);
             }
             if (regularTokenizer.getNeList() != null && regularTokenizer.getNeList().size() != 0) {
-                neString += regularTokenizer.getNeString(";", true);
+                neString += ";" + regularTokenizer.getNeString(";", true);
                 System.out.println("NE all: " + neString);
             }
             if(!"".equals(neString)){
@@ -150,7 +160,7 @@ public class Searcher {
         if (useQueryExpansion) {
             reader.close();
 
-            this.reader = DirectoryReader.open(FSDirectory.open(new File(DocFields.INDEX_DIR).toPath()));
+            this.reader = DirectoryReader.open(FSDirectory.open(new File(this.indexDir).toPath()));
             searcher = new IndexSearcher(reader);
             MoreLikeThis mlt = new MoreLikeThis(reader);
             mlt.setMinTermFreq(0);

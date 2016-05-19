@@ -68,8 +68,8 @@
         </div>
         <div class="row">
             <div class="col-md-1"></div>
-            <label class="col-md-2 advanced-search" >Publishing Year (DBLP)</label>
-            <div class="btn-group advanced-search col-md-2 " data-toggle="buttons">
+            <label class="col-md-2 advanced-search" style="margin-top: 22px;">Publishing Year (DBLP)</label>
+            <div class="btn-group advanced-search col-md-2 " data-toggle="buttons" style="margin-top: -4px;">
                 <p th:value="${searchForm.operator}"></p>
                 <label class="btn btn-success btn-sm">
                     <input type="radio" name="operator" id="eq" autocomplete="off" th:checked="${searchForm.operator == 'eq'}"/> =
@@ -102,7 +102,7 @@
         </ul>
         <div id="tabs-content" class="tab-content">
             <div class="tab-pane active" id="corpus">
-                <i id="loader" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                <i id="loader" class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-left: 50%; margin-top: 10%;float: left;"></i>
                 <span class="sr-only">Loading...</span>
 
                 <div id="result-list">
@@ -117,7 +117,7 @@
                 </div>
             </div>
             <div class="tab-pane" id="dbpedia">
-                <i id="loader-dbpedia" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                <i id="loader-dbpedia" class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-left: 50%; margin-top: 10%;float: left;"></i>
                 <span class="sr-only">Loading...</span>
 
                 <div id="result-list-dbpedia">
@@ -132,7 +132,7 @@
                 </div>
             </div>
             <div class="tab-pane" id="dblp">
-                <i id="loader-dblp" class="fa fa-spinner fa-pulse fa-3x fa-fw"></i>
+                <i id="loader-dblp" class="fa fa-spinner fa-pulse fa-3x fa-fw" style="margin-left: 50%; margin-top: 10%;float: left;"></i>
                 <span class="sr-only">Loading...</span>
 
                 <div id="result-list-dblp">
